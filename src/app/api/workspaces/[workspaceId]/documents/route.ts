@@ -1,11 +1,11 @@
-import { extractText } from "unpdf";
-import { chunkContent } from "@/lib/chunking";
-import { generateEmbeddings } from "@/lib/embedding";
+import { addContext, chunkContent } from "@/lib/chunking";
 import { db } from "@/lib/db-config";
-import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { generateEmbeddings } from "@/lib/embedding";
+import { extractTextFromFile, isSupportedType } from "@/lib/parsers";
 import { chunks, documents, workspaceMembers } from "@/schema";
+import { auth } from "@clerk/nextjs/server";
 import { and, eq, inArray } from "drizzle-orm";
+import { NextResponse } from "next/server";
 
 /*
   Ingestion pipeline — upload → extract → chunk → embed → store.
@@ -27,7 +27,7 @@ import { and, eq, inArray } from "drizzle-orm";
 
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ workspaceId: string }> },
+  { params }: { params: Promise<{ workspaceId: string }> }
 ) {
   try {
     // Authentication.
@@ -40,7 +40,7 @@ export async function POST(
         },
         {
           status: 401,
-        },
+        }
       );
     }
 
@@ -54,7 +54,7 @@ export async function POST(
         },
         {
           status: 400,
-        },
+        }
       );
     }
 
@@ -63,7 +63,7 @@ export async function POST(
       where: and(
         eq(workspaceMembers.userId, userId),
         eq(workspaceMembers.workspaceId, workspaceId),
-        inArray(workspaceMembers.role, ["owner", "editor"]),
+        inArray(workspaceMembers.role, ["owner", "editor"])
       ),
     });
 
@@ -75,7 +75,7 @@ export async function POST(
         },
         {
           status: 403,
-        },
+        }
       );
     }
 
@@ -91,41 +91,36 @@ export async function POST(
         },
         {
           status: 400,
-        },
+        }
       );
     }
 
-    if (file.type !== "application/pdf") {
+    if (!isSupportedType(file.type)) {
       return NextResponse.json(
         {
           success: false,
-          message: "Only PDF files are allowed.",
+          message: "Supported formats: PDF, DOCX, TXT, Markdown.",
         },
-        {
-          status: 400,
-        },
+        { status: 400 }
       );
     }
 
     // Convert File to Buffer and extract text
-    const bytes = await file.bytes();
-    const buffer = new Uint8Array(bytes);
-    const { text } = await extractText(buffer);
-
-    const fullText = text.join("\n\n");
+    const fullText = await extractTextFromFile(file);
     if (!fullText || fullText.trim().length === 0) {
       return NextResponse.json(
         {
           success: false,
-          message: "No text found in PDF file",
+          message: "No text found in PDF, DOCX, TXT, Markdown file.",
         },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
     // Creating Chunks -> then embeddings
     const textChunks: string[] = await chunkContent(fullText);
-    const embeddings = await generateEmbeddings(textChunks);
+    const contextualizedChunks = addContext(textChunks, file.name);
+    const embeddings = await generateEmbeddings(contextualizedChunks);
 
     // No need to check !result -> transactions either return the result or throw an error.
     const result = await db.transaction(async (tx) => {
@@ -168,7 +163,7 @@ export async function POST(
         documentId: result.id,
         message: "Document uploaded successfully.",
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.error("[POST /api/[workspaceId]/documents ]", error);
@@ -179,7 +174,7 @@ export async function POST(
       },
       {
         status: 500,
-      },
+      }
     );
   }
 }
