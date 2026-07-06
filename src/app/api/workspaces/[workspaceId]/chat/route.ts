@@ -13,8 +13,9 @@ import { searchDocuments } from "@/lib/search";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { db } from "@/lib/db-config";
-import { workspaceMembers } from "@/schema";
+import { chatSessions, workspaceMembers } from "@/schema";
 import { and, eq } from "drizzle-orm";
+import { messages as messagesSchema } from "@/schema";
 
 /*
   Flow:
@@ -133,13 +134,25 @@ export async function POST(
     }
 
     // Parse messages
-    const { messages }: { messages: ChatMessage[] } = await req.json();
+    const {
+      messages,
+      sessionId,
+    }: { messages: ChatMessage[]; sessionId: string } = await req.json();
 
     if (messages.length === 0) {
       return NextResponse.json(
         {
           success: false,
           message: "Message not provided.",
+        },
+        { status: 400 },
+      );
+    }
+    if (!sessionId) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: "Session id required.",
         },
         { status: 400 },
       );
@@ -176,7 +189,33 @@ export async function POST(
       }),
     };
 
-    // Streaming with Groq
+    // User's message.
+    const lastMessage = messages.at(-1);
+
+    // Save user's message
+    const userContent =
+      lastMessage?.parts
+        .filter(
+          (part): part is { type: "text"; text: string } =>
+            part.type === "text",
+        )
+        .map((part) => part.text)
+        .join(" ") ?? "";
+
+    if (!userContent) {
+      return NextResponse.json(
+        { success: false, message: "Empty message." },
+        { status: 400 },
+      );
+    }
+
+    await db.insert(messagesSchema).values({
+      sessionId,
+      role: "user",
+      content: userContent,
+    });
+
+    // Streaming with Groq AI
     // stopWhen: stepCountIs(3) allows:
     //   Step 1 → LLM calls tool
     //   Step 2 → Tool executes, results returned to LLM
@@ -187,12 +226,26 @@ export async function POST(
       tools,
       system: SYSTEM_PROMPT,
       stopWhen: stepCountIs(3),
+      onEnd: async ({ text }) => {
+        // Save assistant's completed response
+        await db.insert(messagesSchema).values({
+          sessionId,
+          role: "assistant",
+          content: text,
+        });
+      },
     });
 
     return result.toUIMessageStreamResponse();
   } catch (error) {
-    console.error("Error streaming chat completion: ", error);
-    return new Response("Failed to stream chat completion", { status: 500 });
+    console.error("[POST /api/workspaces/[workspaceId]/chat  ]", error);
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Internal server error",
+      },
+      { status: 500 },
+    );
   }
 }
 
