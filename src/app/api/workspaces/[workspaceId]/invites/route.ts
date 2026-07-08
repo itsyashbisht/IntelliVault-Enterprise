@@ -41,7 +41,10 @@ export async function POST(
 
     if (!workspaceId) {
       return NextResponse.json(
-        { success: false, message: "Workspace ID is required." },
+        {
+          success: false,
+          message: "Workspace ID is required.",
+        },
         { status: 400 },
       );
     }
@@ -147,7 +150,7 @@ export async function POST(
 
     // 9. Send invite email
     await resend.emails.send({
-      from: "IntelliVault <invites@intellivault.com>",
+      from: "IntelliVault <onboarding@resend.dev>",
       to: email,
       subject: `You're invited to join ${workspace.name} on IntelliVault`,
       react: WorkspaceInviteEmail({

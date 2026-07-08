@@ -15,7 +15,7 @@ import { workspaceMembers, workspaces } from "@/schema";
  * */
 
 export async function GET(
-  _request: Request,
+  req: Request,
   { params }: { params: Promise<{ workspaceId: string }> },
 ) {
   try {
@@ -126,6 +126,7 @@ export async function PATCH(
 
     // Validations
     const { workspaceId } = await params;
+
     if (!workspaceId) {
       return NextResponse.json(
         {
@@ -223,7 +224,8 @@ export async function PATCH(
     return NextResponse.json(
       {
         success: true,
-        workspace: updatedWorkspace,
+        data: updatedWorkspace,
+        message: "Workspace updated successfully",
       },
       {
         status: 200,
@@ -252,11 +254,14 @@ export async function PATCH(
 5. Cascade deletes everything else automatically
 6. Return success
 * */
-export async function DELETE({
-  params,
-}: {
-  params: Promise<{ workspaceId: string }>;
-}) {
+export async function DELETE(
+  _: Request,
+  {
+    params,
+  }: {
+    params: Promise<{ workspaceId: string }>;
+  },
+) {
   try {
     // Authentication.
     const { userId } = await auth();
@@ -274,6 +279,7 @@ export async function DELETE({
 
     // Validation.
     const { workspaceId } = await params;
+    console.log(workspaceId);
     if (!workspaceId) {
       return NextResponse.json(
         {

@@ -29,7 +29,9 @@ export function generateUniqueSlug(base: string): string {
 }
 
 export async function POST(req: Request) {
+  console.log("Route reached!")
   try {
+
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json(
