@@ -1,4 +1,3 @@
-import TopNav from "@/components/top-nav";
 import React from "react";
 
 export default function MarketingLayout({
@@ -8,7 +7,6 @@ export default function MarketingLayout({
 }) {
   return (
     <>
-      <TopNav />
       <main>{children}</main>
     </>
   );
