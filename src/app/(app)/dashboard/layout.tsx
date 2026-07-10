@@ -13,7 +13,8 @@ export default async function AppLayout({
 
   return (
     <div className="min-h-dvh bg-[var(--color-canvas)]">
-      <div>{children}</div>
+      <TopNav />
+      <div className="pt-14">{children}</div>
     </div>
   );
 }
