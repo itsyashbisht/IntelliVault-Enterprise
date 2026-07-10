@@ -3,7 +3,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import React from "react";
-import { Navigation } from "@/components/navigation";
 
 export const metadata: Metadata = {
   title: "IntelliVault",
@@ -21,14 +20,8 @@ export default function RootLayout({
 }) {
   return (
     <ClerkProvider>
-      <html
-        lang="en"
-        className={inter.className}
-      >
-        <body className="bg-canvas text-ink antialiased">
-          {/*<Navigation />*/}
-          {children}
-        </body>
+      <html lang="en" className={inter.className}>
+        <body className="bg-canvas text-ink antialiased">{children}</body>
       </html>
     </ClerkProvider>
   );

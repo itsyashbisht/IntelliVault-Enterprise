@@ -1,5 +1,4 @@
 "use client";
-import { useEffect, useState } from "react";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -11,111 +10,9 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-
-function IntelliVaultLogo({ size = 24 }: { size?: number }) {
-  const s = size;
-  return (
-    <svg
-      width={s}
-      height={s}
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      {/* Left bar — I */}
-      <rect x="3" y="4" width="3.5" height="16" rx="1" fill="#5e6ad2" />
-      {/* Right bar — V outer stroke */}
-      <path
-        d="M13 4 L17.5 16 L22 4"
-        stroke="#5e6ad2"
-        strokeWidth="3.5"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-      />
-      {/* Bridge — connecting I to V, acts as vault lock bar */}
-      <rect
-        x="3"
-        y="10.25"
-        width="9"
-        height="2"
-        rx="1"
-        fill="#5e6ad2"
-        opacity="0.5"
-      />
-    </svg>
-  );
-}
-
-// ── Wordmark ──────────────────────────────────────────────────────────────────
-function Wordmark({ size = "md" }: { size?: "sm" | "md" | "lg" }) {
-  const sizeMap = { sm: "text-[13px]", md: "text-[15px]", lg: "text-[20px]" };
-  const logoSize = { sm: 16, md: 20, lg: 28 };
-  return (
-    <div className="flex items-center gap-2">
-      <IntelliVaultLogo size={logoSize[size]} />
-      <span
-        className={`${sizeMap[size]} font-semibold text-[#f7f8f8] tracking-[-0.3px]`}
-      >
-        IntelliVault
-      </span>
-    </div>
-  );
-}
-
-// ── Top Navigation ─────────────────────────────────────────────────────────────
-function TopNav() {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 12);
-    window.addEventListener("scroll", handler, { passive: true });
-    return () => window.removeEventListener("scroll", handler);
-  }, []);
-
-  return (
-    <header
-      className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center px-6 transition-all duration-200"
-      style={{
-        background: scrolled ? "rgba(1,1,2,0.92)" : "transparent",
-        backdropFilter: scrolled ? "blur(12px)" : "none",
-        borderBottom: scrolled ? "1px solid #23252a" : "1px solid transparent",
-      }}
-    >
-      <Link href="/" className="flex items-center">
-        <Wordmark size="md" />
-      </Link>
-
-      <nav className="hidden md:flex items-center gap-0.5 ml-8">
-        {["Features", "How it works", "Pricing"].map((item) => (
-          <a
-            key={item}
-            href={`#${item.toLowerCase().replace(" ", "-")}`}
-            className="px-3 py-1.5 text-[13px] text-[#8a8f98] hover:text-[#f7f8f8] transition-colors rounded-[6px] hover:bg-[#0f1011]"
-          >
-            {item}
-          </a>
-        ))}
-      </nav>
-
-      <div className="flex items-center gap-2 ml-auto">
-        <Link
-          href="/sign-in"
-          className="px-3 py-1.5 text-[13px] font-medium text-[#d0d6e0] hover:text-[#f7f8f8] transition-colors"
-        >
-          Sign in
-        </Link>
-        <Link
-          href="/sign-up"
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white text-[13px] font-medium transition-colors"
-        >
-          Get started
-          <ChevronRight size={12} />
-        </Link>
-      </div>
-    </header>
-  );
-}
+import TopNav from "@/components/top-nav";
+import Wordmark from "@/components/workspace-home/wordmark";
+import IntelliVaultLogo from "@/components/logo";
 
 // ── Fake Product UI Screenshot ────────────────────────────────────────────────
 function ProductMockup() {
@@ -335,7 +232,7 @@ export default function LandingPage() {
         <div className="flex items-center justify-center gap-3 flex-wrap mb-4">
           <Link
             href="/sign-up"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white text-[14px] font-medium transition-colors min-h-[40px]"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white! text-[14px] font-medium transition-colors min-h-[40px]"
           >
             Start for free
             <ChevronRight size={14} />
