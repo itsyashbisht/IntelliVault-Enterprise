@@ -1,6 +1,6 @@
-import { Badge, FileText, FolderOpen, Plus, Users } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import WorkspaceCard from "@/components/dashboard/workspace-card";
+import { Button } from "@/components/ui/button";
+import { FolderOpen, Plus } from "lucide-react";
 
 export type WorkspaceData = {
   id: string;

@@ -1,8 +1,8 @@
-import { auth } from "@clerk/nextjs/server";
-import { documents, workspaceMembers, workspaces } from "@/schema";
-import { count, eq, inArray } from "drizzle-orm";
-import { db } from "@/lib/db-config";
 import DashboardClient from "@/app/(app)/dashboard/dashboard-client";
+import { db } from "@/lib/db-config";
+import { documents, workspaceMembers, workspaces } from "@/schema";
+import { auth } from "@clerk/nextjs/server";
+import { count, eq, inArray } from "drizzle-orm";
 
 export default async function WorkspacesDashboard() {
   const { userId } = await auth();
@@ -42,10 +42,10 @@ export default async function WorkspacesDashboard() {
 
   // Turn arrays into lookup maps for O(1) access
   const docCountMap = Object.fromEntries(
-    docCounts.map((d) => [d.workspaceId, Number(d.count)]),
+    docCounts.map((d) => [d.workspaceId, Number(d.count)])
   );
   const memberCountMap = Object.fromEntries(
-    memberCounts.map((m) => [m.workspaceId, Number(m.count)]),
+    memberCounts.map((m) => [m.workspaceId, Number(m.count)])
   );
 
   // Merge everything together

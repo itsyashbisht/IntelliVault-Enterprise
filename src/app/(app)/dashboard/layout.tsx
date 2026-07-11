@@ -1,7 +1,7 @@
+import DashboardNav from "@/components/dashboard/dashboard-nav";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import React from "react";
-import TopNav from "@/components/top-nav";
 
 export default async function AppLayout({
   children,
@@ -13,8 +13,8 @@ export default async function AppLayout({
 
   return (
     <div className="min-h-dvh bg-[var(--color-canvas)]">
-      <TopNav />
-      <div className="pt-14">{children}</div>
+      <DashboardNav />
+      <div className="mt-10">{children}</div>
     </div>
   );
 }

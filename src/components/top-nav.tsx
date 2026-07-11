@@ -1,11 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
-import Link from "next/link";
-import { ChevronRight } from "lucide-react";
+
 import Wordmark from "@/components/workspace-home/wordmark";
+import { useAuth } from "@clerk/nextjs";
+import { ChevronRight } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 
 export default function TopNav() {
   const [scrolled, setScrolled] = useState(false);
+  const { isSignedIn, isLoaded, signOut } = useAuth();
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 12);
@@ -33,26 +36,48 @@ export default function TopNav() {
             href={`#${item.toLowerCase().replace(" ", "-")}`}
             className="px-3 py-1.5 text-[13px] text-[#8a8f98] hover:text-[#f7f8f8] transition-colors rounded-[6px] hover:bg-[#0f1011]"
           >
-            {item}
+            {item}{" "}
           </a>
-        ))}
+        ))}{" "}
       </nav>
 
       <div className="flex items-center gap-2 ml-auto">
-        <Link
-          href="/sign-in"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium rounded-[8px] transition-colors cursor-pointer select-none bg-[#0f1011] text-[#f7f8f8] border border-[#23252a] hover:bg-[#141516]"
-        >
-          Sign in
-        </Link>
+        {isLoaded &&
+          (!isSignedIn ? (
+            <>
+              <Link
+                href="/sign-in"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium rounded-[8px] transition-colors bg-[#0f1011] !text-[#f7f8f8] border border-[#23252a] hover:bg-[#141516]"
+              >
+                Sign in
+              </Link>
 
-        <Link
-          href="/sign-up"
-          className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium rounded-[8px] transition-colors cursor-pointer select-none bg-[#5e6ad2] text-white! hover:bg-[#828fff] active:bg-[#5e69d1]"
-        >
-          Get started
-          <ChevronRight size={12} />
-        </Link>
+              <Link
+                href="/sign-up"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium rounded-[8px] transition-colors bg-[#5e6ad2] !text-white hover:bg-[#828fff]"
+              >
+                Get started
+                <ChevronRight size={12} />
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                href="/dashboard"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-[13px] font-medium rounded-[8px] transition-colors bg-[#5e6ad2] text-white! hover:bg-[#828fff]"
+              >
+                Dashboard
+                <ChevronRight size={12} />
+              </Link>
+
+              <button
+                onClick={() => signOut({ redirectUrl: "/" })}
+                className="inline-flex items-center px-3 py-1.5 text-[13px] font-medium rounded-[8px] transition-colors bg-[#0f1011] text-[#f7f8f8] border border-[#23252a] hover:bg-[#141516] cursor-pointer"
+              >
+                Sign out
+              </button>
+            </>
+          ))}{" "}
       </div>
     </header>
   );

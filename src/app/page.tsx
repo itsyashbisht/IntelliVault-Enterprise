@@ -97,7 +97,7 @@ function ProductMockup() {
                       {["2h ago", "Yesterday", "3d ago"][i]}
                     </p>
                   </div>
-                ),
+                )
               )}
             </div>
           </div>
@@ -201,7 +201,7 @@ const features = [
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#010102] text-[#f7f8f8]">
-      <TopNav />
+      <TopNav showDashboardBtn={true} />
 
       {/* ── Hero ──────────────────────────────────────────────── */}
       <section className="pt-36 pb-20 px-6 max-w-[1280px] mx-auto text-center">
