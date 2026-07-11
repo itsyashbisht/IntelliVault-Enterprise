@@ -1,4 +1,4 @@
-import React from "react";
+import TopNav from "@/components/top-nav";
 
 export default function MarketingLayout({
   children,
@@ -6,8 +6,9 @@ export default function MarketingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
-      <main>{children}</main>
-    </>
-  );
+    <div className="min-h-dvh bg-[var(--color-canvas)]">
+      <TopNav />
+      <div className="pt-14">{children}</div>
+    </div>
+  )
 }
