@@ -1,17 +1,11 @@
-import { Crown, FileText, Shield, UserIcon, Users } from "lucide-react";
 import { WorkspaceData } from "@/app/(app)/dashboard/dashboard-client";
-import Link from "next/link";
 import Badge from "@/components/badge";
+import { FileText, Users } from "lucide-react";
+import Link from "next/link";
 
 interface Props {
   workspace: WorkspaceData;
 }
-//
-// const roleIcon = (role: Role) => {
-//   if (role === "owner") return <Crown size={11} className="text-[#5e6ad2]" />;
-//   if (role === "admin") return <Shield size={11} className="text-[#8a8f98]" />;
-//   return <UserIcon size={11} className="text-[#62666d]" />;
-// };
 
 export default function WorkspaceCard({ workspace }: Props) {
   return (
