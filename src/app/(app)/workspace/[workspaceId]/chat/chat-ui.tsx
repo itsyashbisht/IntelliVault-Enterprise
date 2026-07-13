@@ -5,6 +5,7 @@ import {
   ConversationContent,
   ConversationScrollButton,
 } from "@/components/ai-elements/conversation";
+import { Message, MessageContent } from "@/components/ai-elements/message";
 import {
   PromptInput,
   PromptInputBody,
@@ -14,13 +15,19 @@ import {
   PromptInputToolbar,
   PromptInputTools,
 } from "@/components/ai-elements/prompt-input";
-import { Fragment, useState } from "react";
-import { useChat } from "@ai-sdk/react";
-import { Message, MessageContent } from "@/components/ai-elements/message";
 import { Response } from "@/components/ai-elements/response";
+import CitationChip from "@/components/chat/citation-chip";
+import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, UIMessage } from "ai";
-import { Bot, Loader2, Sparkles } from "lucide-react";
-import CitationChip from "@/components/citation-chip";
+import {
+  Bot,
+  FileSearch,
+  Loader2,
+  MessageSquareText,
+  Search,
+  Sparkles,
+} from "lucide-react";
+import { Fragment, useState } from "react";
 
 interface ChatUIProps {
   workspaceId: string;
@@ -28,16 +35,40 @@ interface ChatUIProps {
   initialMessages?: UIMessage[];
 }
 
-export function ChatUI(props: ChatUIProps) {
-  const { workspaceId, sessionId, initialMessages } = props;
-  const [input, setInput] = useState<string>("");
+const suggestions = [
+  {
+    icon: FileSearch,
+    title: "Summarize documents",
+    description: "Get a concise overview of your workspace.",
+    prompt: "Summarize the key points from my documents",
+  },
+  {
+    icon: MessageSquareText,
+    title: "Explore main topics",
+    description: "Understand the subjects covered in your files.",
+    prompt: "What are the main topics in my documents?",
+  },
+  {
+    icon: Search,
+    title: "Find key details",
+    description: "Extract important facts, dates, and numbers.",
+    prompt: "Find important dates or numbers",
+  },
+];
+
+export function ChatUI({
+  workspaceId,
+  sessionId,
+  initialMessages,
+}: ChatUIProps) {
+  const [input, setInput] = useState("");
   const [sessionError, setSessionError] = useState<string | null>(null);
 
   const {
     messages,
     sendMessage,
     status,
-    error: ChatError,
+    error: chatError,
   } = useChat({
     messages: initialMessages ?? [],
     transport: new DefaultChatTransport({
@@ -50,36 +81,50 @@ export function ChatUI(props: ChatUIProps) {
     if (!message.text?.trim()) return;
 
     try {
+      setSessionError(null);
+
       if (!sessionId) {
         const res = await fetch(
           `/api/workspaces/${workspaceId}/chat/sessions`,
           {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ firstMessage: message.text.trim() }),
-          },
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              firstMessage: message.text.trim(),
+            }),
+          }
         );
+
         const { data } = await res.json();
+
         window.history.replaceState(
           null,
           "",
-          `/workspace/${workspaceId}/chat/${data.sessionId}`,
+          `/workspace/${workspaceId}/chat/${data.sessionId}`
         );
+
         await sendMessage(
           { text: message.text },
-          { body: { sessionId: data.sessionId } },
+          {
+            body: {
+              sessionId: data.sessionId,
+            },
+          }
         );
       } else {
-        // Existing session — just send
         await sendMessage({ text: message.text });
       }
 
       setInput("");
     } catch (error) {
       console.error("Failed to create session:", error);
+
       setSessionError(
-        error instanceof Error ? error.message : "Something went wrong",
+        error instanceof Error ? error.message : "Something went wrong"
       );
+
       setInput("");
     }
   };
@@ -88,108 +133,159 @@ export function ChatUI(props: ChatUIProps) {
   const isEmpty = messages.length === 0;
 
   return (
-    <div className="flex flex-col h-full max-w-full w-full bg-[var(--color-canvas)] p-5">
-      {/* ── Page header ─────────────────────────────── */}
-      <header className="flex flex-col gap-2 pb-8 px-1 shrink-0">
-        <h1 className="text-[28px] font-semibold tracking-[-0.6px] text-[var(--color-ink)]">
-          IntelliVault Chat
-        </h1>
-        <p className="text-[14px] font-400 text-[var(--color-ink-subtle)]">
-          Ask questions about your workspace documents.
-        </p>
+    <main className="flex min-h-0 flex-1 flex-col bg-[var(--color-canvas)]">
+      <header className="flex h-14 shrink-0 items-center border-b border-[var(--color-hairline)] px-5 lg:px-7">
+        <div className="min-w-0">
+          <h1 className="truncate text-[14px] font-medium tracking-[-0.1px] text-[var(--color-ink)]">
+            IntelliVault Chat
+          </h1>
+
+          <p className="mt-0.5 truncate text-[11px] text-[var(--color-ink-tertiary)]">
+            Search and understand your workspace
+          </p>
+        </div>
       </header>
 
-      {/* ── Chat area ───────────────────────────────── */}
-      <div className="flex flex-col flex-1 min-h-0 rounded-lg border border-[var(--color-hairline)] overflow-hidden bg-[var(--color-surface-1)]">
-        {/* Messages */}
-        <Conversation className="flex-1 min-h-0">
-          <ConversationContent className="px-8 py-8 flex flex-col gap-8">
-            {/* Empty state */}
+      <section className="relative flex min-h-0 flex-1 flex-col">
+        <Conversation className="min-h-0 flex-1">
+          <ConversationContent
+            className={
+              isEmpty
+                ? "mx-auto flex size-full w-full max-w-[760px] justify-center px-5 py-10 md:px-8"
+                : "mx-auto flex w-full max-w-[760px] flex-col gap-9 px-5 pb-10 pt-8 md:px-8 md:pt-10"
+            }
+          >
             {isEmpty && (
-              <div className="flex flex-col items-center justify-center h-full gap-6 py-32">
-                <div className="w-14 h-14 rounded-xl bg-[var(--color-primary)]/10 border border-[var(--color-primary)]/20 flex items-center justify-center">
-                  <Sparkles size={24} className="text-[var(--color-primary)]" />
-                </div>
-                <div className="flex flex-col items-center gap-2 max-w-sm">
-                  <p className="text-[16px] font-500 text-[var(--color-ink)]">
-                    Ask anything about your documents
-                  </p>
-                  <p className="text-[14px] text-[var(--color-ink-subtle)] text-center">
-                    IntelliVault searches your uploaded files to answer
-                    accurately.
+              <div className="flex w-full flex-col justify-center">
+                <div className="mb-8">
+                  <div className="mb-5 flex size-10 items-center justify-center rounded-lg border border-[var(--color-hairline)] bg-[var(--color-surface-1)]">
+                    <Sparkles
+                      size={17}
+                      strokeWidth={1.8}
+                      className="text-[var(--color-primary)]"
+                    />
+                  </div>
+
+                  <h2 className="text-[26px] font-semibold tracking-[-0.6px] text-[var(--color-ink)]">
+                    What can I help you find?
+                  </h2>
+
+                  <p className="mt-2 max-w-lg text-[14px] leading-6 text-[var(--color-ink-subtle)]">
+                    Ask questions about your workspace and get answers grounded
+                    in your documents.
                   </p>
                 </div>
 
-                {/* Suggested prompts */}
-                <div className="flex flex-wrap gap-2 mt-4 justify-center max-w-2xl">
-                  {[
-                    "Summarize the key points",
-                    "What are the main topics?",
-                    "Find important dates or numbers",
-                  ].map((prompt) => (
-                    <button
-                      key={prompt}
-                      onClick={() => {
-                        handleSubmit({ text: prompt });
-                      }}
-                      className="
-                        px-3 py-2 rounded-md text-[13px] font-500
-                        bg-[var(--color-surface-2)]
-                        border border-[var(--color-hairline)]
-                        text-[var(--color-ink-subtle)]
-                        hover:text-[var(--color-ink-muted)]
-                        hover:border-[var(--color-hairline-strong)]
-                        hover:bg-[var(--color-surface-3)]
-                        transition-all duration-150
-                        cursor-pointer
-                      "
-                    >
-                      {prompt}
-                    </button>
-                  ))}
+                <div className="grid gap-2 md:grid-cols-3">
+                  {suggestions.map((suggestion) => {
+                    const Icon = suggestion.icon;
+
+                    return (
+                      <button
+                        key={suggestion.title}
+                        type="button"
+                        disabled={isLoading}
+                        onClick={() =>
+                          handleSubmit({
+                            text: suggestion.prompt,
+                          })
+                        }
+                        className="
+                          group flex min-h-[132px] cursor-pointer
+                          flex-col rounded-lg
+                          border border-[var(--color-hairline)]
+                          bg-[var(--color-surface-1)]
+                          p-4 text-left
+                          transition-colors duration-150
+                          hover:border-[var(--color-hairline-strong)]
+                          hover:bg-[var(--color-surface-2)]
+                          disabled:pointer-events-none
+                          disabled:opacity-50
+                        "
+                      >
+                        <Icon
+                          size={16}
+                          strokeWidth={1.7}
+                          className="
+                            text-[var(--color-ink-tertiary)]
+                            transition-colors
+                            group-hover:text-[var(--color-primary)]
+                          "
+                        />
+
+                        <div className="mt-auto pt-6">
+                          <p className="text-[13px] font-medium text-[var(--color-ink)]">
+                            {suggestion.title}
+                          </p>
+
+                          <p className="mt-1.5 text-[11px] leading-[17px] text-[var(--color-ink-tertiary)]">
+                            {suggestion.description}
+                          </p>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             )}
 
-            {/* Message list */}
             {messages.map((message) => (
-              <div
+              <article
                 key={message.id}
-                className={`flex gap-4 ${message.role === "user" ? "justify-end" : "justify-start"}`}
+                className={`
+                  flex w-full
+                  ${
+                    message.role === "user"
+                      ? "justify-end"
+                      : "justify-start gap-3"
+                  }
+                `}
               >
-                {/* Assistant avatar */}
                 {message.role === "assistant" && (
-                  <div
-                    className="
-                    shrink-0 w-8 h-8 rounded-md mt-1
-                    bg-[var(--color-primary)]/10
-                    border border-[var(--color-primary)]/20
-                    flex items-center justify-center
-                  "
-                  >
-                    <Bot size={16} className="text-[var(--color-primary)]" />
+                  <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md border border-[var(--color-hairline)] bg-[var(--color-surface-1)]">
+                    <Bot
+                      size={13}
+                      strokeWidth={1.8}
+                      className="text-[var(--color-primary)]"
+                    />
                   </div>
                 )}
 
                 <div
-                  className={`flex flex-col gap-2 max-w-[75%] ${message.role === "user" ? "items-end" : "items-start"}`}
+                  className={`
+                    flex min-w-0 flex-col gap-3
+                    ${
+                      message.role === "user"
+                        ? "max-w-[80%] items-end"
+                        : "max-w-[calc(100%-40px)] flex-1 items-start"
+                    }
+                  `}
                 >
-                  {message.parts.map((part, i) => {
-                    console.log(part);
+                  {message.parts.map((part, index) => {
                     switch (part.type) {
                       case "text":
                         return (
-                          <Fragment key={`${message.id}-${i}`}>
+                          <Fragment key={`${message.id}-${index}`}>
                             <Message from={message.role}>
                               <MessageContent
-                                className={`
-                                  px-4 py-3 rounded-lg text-[14px] leading-relaxed font-400
-                                  ${
-                                    message.role === "user"
-                                      ? "bg-[var(--color-primary)] text-white rounded-br-md"
-                                      : "bg-[var(--color-surface-2)] text-[var(--color-ink)] rounded-bl-md border border-[var(--color-hairline)]"
-                                  }
-                                `}
+                                className={
+                                  message.role === "user"
+                                    ? `
+                                      rounded-lg
+                                      border border-[var(--color-hairline)]
+                                      bg-[var(--color-surface-2)]
+                                      px-4 py-2.5
+                                      text-[14px] leading-6
+                                      text-[var(--color-ink)]
+                                    `
+                                    : `
+                                      w-full
+                                      bg-transparent
+                                      p-0
+                                      text-[14px] leading-7
+                                      text-[var(--color-ink-muted)]
+                                    `
+                                }
                               >
                                 <Response>{part.text}</Response>
                               </MessageContent>
@@ -198,124 +294,170 @@ export function ChatUI(props: ChatUIProps) {
                         );
 
                       case "tool-searchKnowledgeBase": {
-                        const callId = part.toolCallId;
+                        if (part.state !== "output-available") return null;
 
-                        switch (part.state) {
-                          case "output-available":
-                            const results = part.output as Array<{
-                              content: string;
-                              source: string;
-                              chunkId: string;
-                            }>;
-                            console.log(results);
-
-                            if (!results || results.length === 0) return null;
-
-                            const uniqueSet = [
-                              ...new Set(results?.map((r) => r.source)),
-                            ];
-
+                        const output = part.output;
+                        
+                        // Handle string response — either error or "no results" message
+                        if (typeof output === "string") {
+                          // Don't show anything for "no results" — LLM handles it in text response
+                          // Only show if it's a real error worth surfacing
+                          if (output.toLowerCase().includes("error")) {
                             return (
                               <div
-                                key={`${callId}-${i}`}
-                                className="flex flex-wrap gap-2 mt-2"
+                                key={`${part.toolCallId}-${index}`}
+                                className="flex items-center gap-1.5 text-[12px] text-[var(--color-ink-tertiary)]"
                               >
-                                {uniqueSet?.map((r) => (
-                                  <CitationChip key={r} source={r} />
-                                ))}
+                                <span className="w-1 h-1 rounded-full bg-[var(--color-error)]/50" />
+                                Search encountered an issue
                               </div>
                             );
-
-                          default:
-                            return null;
+                          }
+                          return null; // "No relevant information found" — LLM text handles this
                         }
+
+                        // Handle Array response
+                        if (Array.isArray(output) || part?.output.length === 0)
+                          return null;
+
+                        const results = part.output as Array<{
+                          content: string;
+                          source: string;
+                          chunkId: string;
+                        }>;
+
+                        if (!(results?.length > 0)) return null;
+
+                        const uniqueSources = [
+                          ...new Set(results?.map((result) => result.source)),
+                        ];
+
+                        return (
+                          <div
+                            key={`${part.toolCallId}-${index}`}
+                            className="flex flex-wrap gap-1.5"
+                          >
+                            {uniqueSources.map((source) => (
+                              <CitationChip key={source} source={source} />
+                            ))}
+                          </div>
+                        );
                       }
+
                       default:
                         return null;
                     }
                   })}
                 </div>
-              </div>
+              </article>
             ))}
 
-            {/* Loading indicator */}
             {isLoading && (
-              <div className="flex gap-4 justify-start">
-                <div
-                  className="
-                  shrink-0 w-8 h-8 rounded-md mt-1
-                  bg-[var(--color-primary)]/10
-                  border border-[var(--color-primary)]/20
-                  flex items-center justify-center
-                "
-                >
-                  <Bot size={16} className="text-[var(--color-primary)]" />
-                </div>
-                <div
-                  className="
-                  flex items-center gap-2
-                  px-4 py-3 rounded-lg rounded-bl-md
-                  bg-[var(--color-surface-2)]
-                  border border-[var(--color-hairline)]
-                "
-                >
-                  <Loader2
-                    size={16}
-                    className="text-[var(--color-primary)] animate-spin"
+              <div className="flex items-start gap-3">
+                <div className="mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-md border border-[var(--color-hairline)] bg-[var(--color-surface-1)]">
+                  <Bot
+                    size={13}
+                    strokeWidth={1.8}
+                    className="text-[var(--color-primary)]"
                   />
-                  <span className="text-[14px] text-[var(--color-ink-subtle)] font-400">
-                    Searching documents...
+                </div>
+
+                <div className="flex items-center gap-2 py-1">
+                  <Loader2
+                    size={13}
+                    className="animate-spin text-[var(--color-primary)]"
+                  />
+
+                  <span className="text-[12px] text-[var(--color-ink-tertiary)]">
+                    Searching workspace
                   </span>
                 </div>
               </div>
             )}
+
+            {(sessionError || chatError) && (
+              <div className="rounded-md border border-[var(--color-hairline)] bg-[var(--color-surface-1)] px-3 py-2.5">
+                <p className="text-[12px] text-[var(--color-ink-subtle)]">
+                  {sessionError ||
+                    chatError?.message ||
+                    "Something went wrong while sending your message."}
+                </p>
+              </div>
+            )}
           </ConversationContent>
+
           <ConversationScrollButton />
         </Conversation>
 
-        {/* ── Input bar ───────────────────────────────── */}
-        <div className="shrink-0 border-t border-[var(--color-hairline)] p-5 bg-[var(--color-surface-1)] flex flex-col gap-3">
-          <PromptInput
-            onSubmit={handleSubmit}
-            className="
-              rounded-md
-              bg-[var(--color-surface-2)]
-              border border-[var(--color-hairline)]
-              focus-within:border-[var(--color-hairline-strong)]
-              focus-within:ring-2 focus-within:ring-[var(--color-primary-focus)]/50
-              transition-all duration-150
-            "
-          >
-            <PromptInputBody>
-              <PromptInputTextarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ask a question about your documents..."
-                className="
-                  bg-transparent border-none outline-none
-                  text-[14px] font-400 text-[var(--color-ink)]
-                  placeholder:text-[var(--color-ink-tertiary)]
-                  resize-none min-h-[44px] max-h-[160px]
-                  px-4 py-3
-                "
-              />
-            </PromptInputBody>
-            <PromptInputToolbar className="px-3 pb-2 flex items-center justify-between">
-              <PromptInputTools />
-              <PromptInputSubmit
-                className="
-                  text-[13px] px-4 py-2 min-h-[32px]
-                  disabled:opacity-40 disabled:cursor-not-allowed
-                "
-              />
-            </PromptInputToolbar>
-          </PromptInput>
+        <footer className="shrink-0 border-t border-[var(--color-hairline)] bg-[var(--color-canvas)] px-5 py-4">
+          <div className="mx-auto w-full max-w-[760px]">
+            <PromptInput
+              onSubmit={handleSubmit}
+              className="
+        flex items-center
+        rounded-lg
+        border border-[var(--color-hairline)]
+        bg-[var(--color-surface-1)]
+        px-2 py-2
+        shadow-none
+        transition-[border-color,box-shadow,background-color]
+        duration-150
+        hover:border-[var(--color-hairline-strong)]
+        focus-within:border-[var(--color-hairline-strong)]
+        focus-within:bg-[var(--color-surface-2)]
+        focus-within:ring-2
+        focus-within:ring-[var(--color-primary-focus)]/15
+      "
+            >
+              <PromptInputBody className="min-w-0 flex-1">
+                <PromptInputTextarea
+                  value={input}
+                  onChange={(event) => setInput(event.target.value)}
+                  placeholder="Ask about your workspace..."
+                  className="
+            min-h-[36px]
+            max-h-[160px]
+            w-full
+            resize-none
+            bg-transparent
+            px-2 py-1.5
+            text-[14px]
+            leading-6
+            text-[var(--color-ink)]
+            placeholder:text-[var(--color-ink-tertiary)]
+          "
+                />
+              </PromptInputBody>
 
-          <p className="text-center text-[12px] text-[var(--color-ink-tertiary)]">
-            Answers are grounded in your workspace documents only.
-          </p>
-        </div>
-      </div>
-    </div>
+              <PromptInputToolbar className="shrink-0 p-0 sefl-center">
+                <PromptInputTools />
+
+                <PromptInputSubmit
+                  status={status}
+                  disabled={!input.trim() || isLoading}
+                  className="
+            size-8
+            shrink-0
+            rounded-md
+            items-center
+            bg-[var(--color-primary)]
+            text-white
+            transition-colors
+            hover:bg-[var(--color-primary-hover)]
+            disabled:bg-[var(--color-surface-3)]
+            disabled:text-[var(--color-ink-tertiary)]
+            disabled:opacity-100
+          "
+                />
+              </PromptInputToolbar>
+            </PromptInput>
+
+            <p className="mt-2 text-center text-[10px] text-[var(--color-ink-tertiary)]">
+              IntelliVault can make mistakes. Verify important information.
+            </p>
+          </div>
+        </footer>
+      </section>
+    </main>
   );
 }

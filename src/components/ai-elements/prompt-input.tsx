@@ -2,49 +2,49 @@
 
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { ChatStatus, FileUIPart } from "ai";
 import {
-  ImageIcon,
-  Loader2Icon,
-  PaperclipIcon,
-  PlusIcon,
-  SendIcon,
-  SquareIcon,
-  XIcon,
+    ImageIcon,
+    Loader2Icon,
+    PaperclipIcon,
+    PlusIcon,
+    SendIcon,
+    SquareIcon,
+    XIcon,
 } from "lucide-react";
 import { nanoid } from "nanoid";
 import {
-  type ChangeEventHandler,
-  Children,
-  type ComponentProps,
-  createContext,
-  type FormEvent,
-  type FormEventHandler,
-  Fragment,
-  type HTMLAttributes,
-  type KeyboardEventHandler,
-  type RefObject,
-  useCallback,
-  useContext,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useRef,
-  useState,
+    type ChangeEventHandler,
+    Children,
+    type ComponentProps,
+    createContext,
+    type FormEvent,
+    type FormEventHandler,
+    Fragment,
+    type HTMLAttributes,
+    type KeyboardEventHandler,
+    type RefObject,
+    useCallback,
+    useContext,
+    useEffect,
+    useLayoutEffect,
+    useMemo,
+    useRef,
+    useState,
 } from "react";
 
 type AttachmentsContext = {
@@ -63,7 +63,7 @@ export const usePromptInputAttachments = () => {
 
   if (!context) {
     throw new Error(
-      "usePromptInputAttachments must be used within a PromptInput",
+      "usePromptInputAttachments must be used within a PromptInput"
     );
   }
 
@@ -149,7 +149,7 @@ export function PromptInputAttachments({
       aria-live="polite"
       className={cn(
         "overflow-hidden transition-[height] duration-200 ease-out",
-        className,
+        className
       )}
       style={{ height: attachments.files.length ? height : 0 }}
       {...props}
@@ -212,7 +212,7 @@ export type PromptInputProps = Omit<
   }) => void;
   onSubmit: (
     message: PromptInputMessage,
-    event: FormEvent<HTMLFormElement>,
+    event: FormEvent<HTMLFormElement>
   ) => void;
 };
 
@@ -256,7 +256,7 @@ export const PromptInput = ({
       }
       return true;
     },
-    [accept],
+    [accept]
   );
 
   const add = useCallback(
@@ -306,7 +306,7 @@ export const PromptInput = ({
         return prev.concat(next);
       });
     },
-    [matchesAccept, maxFiles, maxFileSize, onError],
+    [matchesAccept, maxFiles, maxFileSize, onError]
   );
 
   const remove = useCallback((id: string) => {
@@ -418,7 +418,7 @@ export const PromptInput = ({
       openFileDialog,
       fileInputRef: inputRef,
     }),
-    [items, add, remove, clear, openFileDialog],
+    [items, add, remove, clear, openFileDialog]
   );
 
   return (
@@ -433,10 +433,7 @@ export const PromptInput = ({
         type="file"
       />
       <form
-        className={cn(
-          "w-full divide-y overflow-hidden rounded-xl border bg-background shadow-sm",
-          className,
-        )}
+        className={cn("gap-1.5 rounded-md", className)}
         onSubmit={handleSubmit}
         {...props}
       />
@@ -489,7 +486,7 @@ export const PromptInputTextarea = ({
         "field-sizing-content bg-transparent dark:bg-transparent",
         "max-h-48 min-h-16",
         "focus-visible:ring-0",
-        className,
+        className
       )}
       name="message"
       onChange={(e) => {
@@ -524,7 +521,7 @@ export const PromptInputTools = ({
     className={cn(
       "flex items-center gap-1",
       "[&_button:first-child]:rounded-bl-xl",
-      className,
+      className
     )}
     {...props}
   />
@@ -544,10 +541,10 @@ export const PromptInputButton = ({
   return (
     <Button
       className={cn(
-        "shrink-0 gap-1.5 rounded-lg",
+        "gap-1.5 rounded-md",
         variant === "ghost" && "text-muted-foreground",
         newSize === "default" && "px-3",
-        className,
+        className
       )}
       size={newSize}
       type="button"
@@ -653,7 +650,7 @@ export const PromptInputModelSelectTrigger = ({
     className={cn(
       "border-none bg-transparent font-medium text-muted-foreground shadow-none transition-colors",
       'hover:bg-accent hover:text-foreground [&[aria-expanded="true"]]:bg-accent [&[aria-expanded="true"]]:text-foreground',
-      className,
+      className
     )}
     {...props}
   />
