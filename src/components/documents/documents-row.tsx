@@ -1,6 +1,10 @@
+"use client";
 import { formatDistanceToNow } from "date-fns";
 import { Trash2 } from "lucide-react";
 import StatusBadge from "@/components/documents/status-badge";
+import { useState } from "react";
+import DeleteDocumentModal from "./delete-document-modal";
+import { useRouter } from "next/navigation";
 
 export type Document = {
   id: string;
@@ -15,6 +19,7 @@ export type Document = {
 
 interface DocumentsRowProps {
   document: Document;
+  workspaceId: string;
 }
 
 function formatSize(bytes: number): string {
@@ -23,8 +28,13 @@ function formatSize(bytes: number): string {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
-export default function DocumentRow({ document }: DocumentsRowProps) {
+export default function DocumentRow({
+  document,
+  workspaceId,
+}: DocumentsRowProps) {
   const { createdAt, name, fileType, fileSize, status } = document;
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const router = useRouter();
 
   return (
     <div
@@ -92,9 +102,21 @@ export default function DocumentRow({ document }: DocumentsRowProps) {
           hover:text-[var(--color-error)]
           hover:bg-[var(--color-error)]/10
         "
+          onClick={() => setIsModalOpen(true)}
         >
           <Trash2 size={14} />
         </button>
+        <DeleteDocumentModal
+          onClose={() => setIsModalOpen(false)}
+          open={isModalOpen}
+          workspaceId={workspaceId}
+          documentId={document.id}
+          documentTitle={document.name}
+          onSuccess={() => {
+            setIsModalOpen(false);
+            router.refresh();
+          }}
+        />
       </span>
     </div>
   );

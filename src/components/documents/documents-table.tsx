@@ -5,9 +5,13 @@ import DocumentRow, {
 
 interface DocumentTableProps {
   documents: Document[];
+  workspaceId: string;
 }
 
-export default function DocumentTable({ documents }: DocumentTableProps) {
+export default function DocumentTable({
+  documents,
+  workspaceId,
+}: DocumentTableProps) {
   return (
     <div className="overflow-x-auto rounded-xl border border-[var(--color-hairline)]">
       <div
@@ -45,7 +49,11 @@ export default function DocumentTable({ documents }: DocumentTableProps) {
       ) : (
         <div className="divide-y divide-[var(--color-hairline)] bg-[var(--color-canvas)]">
           {documents.map((doc) => (
-            <DocumentRow key={doc.id} document={doc} />
+            <DocumentRow
+              key={doc.id}
+              document={doc}
+              workspaceId={workspaceId}
+            />
           ))}
         </div>
       )}

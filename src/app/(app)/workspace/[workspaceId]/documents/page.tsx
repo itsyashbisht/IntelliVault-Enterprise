@@ -31,7 +31,7 @@ export default async function DocumentsPage({
       <DocumentsClient workspaceId={workspaceId} />
 
       {/* Document list */}
-      <DocumentTable documents={docs} />
+      <DocumentTable workspaceId={workspaceId} documents={docs} />
     </div>
   );
 }
