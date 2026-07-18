@@ -63,6 +63,9 @@ export function ChatUI({
 }: ChatUIProps) {
   const [input, setInput] = useState("");
   const [sessionError, setSessionError] = useState<string | null>(null);
+  const [currentSessionId, currentSetSessionId] = useState<string | null>(
+    sessionId
+  );
 
   const {
     messages,
@@ -80,10 +83,11 @@ export function ChatUI({
   const handleSubmit = async (message: PromptInputMessage) => {
     if (!message.text?.trim()) return;
 
-    try {
-      setSessionError(null);
+    let activeSessionId = currentSessionId;
 
-      if (!sessionId) {
+    setSessionError(null);
+    try {
+      if (!activeSessionId) {
         const res = await fetch(
           `/api/workspaces/${workspaceId}/chat/sessions`,
           {
@@ -97,7 +101,11 @@ export function ChatUI({
           }
         );
 
+        if (!res.ok) throw new Error("Failed to create session");
         const { data } = await res.json();
+
+        activeSessionId = data.sessionId;
+        currentSetSessionId(data.sessionId);
 
         window.history.replaceState(
           null,
@@ -114,17 +122,22 @@ export function ChatUI({
           }
         );
       } else {
-        await sendMessage({ text: message.text });
+        await sendMessage(
+          { text: message.text },
+          {
+            body: {
+              sessionId: activeSessionId,
+            },
+          }
+        );
       }
-
-      setInput("");
     } catch (error) {
       console.error("Failed to create session:", error);
 
       setSessionError(
         error instanceof Error ? error.message : "Something went wrong"
       );
-
+    } finally {
       setInput("");
     }
   };
@@ -297,7 +310,7 @@ export function ChatUI({
                         if (part.state !== "output-available") return null;
 
                         const output = part.output;
-                        
+
                         // Handle string response — either error or "no results" message
                         if (typeof output === "string") {
                           // Don't show anything for "no results" — LLM handles it in text response
