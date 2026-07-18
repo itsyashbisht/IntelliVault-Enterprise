@@ -97,7 +97,7 @@ function ProductMockup() {
                       {["2h ago", "Yesterday", "3d ago"][i]}
                     </p>
                   </div>
-                ),
+                )
               )}
             </div>
           </div>
@@ -392,7 +392,7 @@ export default function LandingPage() {
           </p>
           <Link
             href="/sign-up"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white text-[14px] font-medium transition-colors min-h-[40px]"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white! text-[14px] font-medium transition-colors min-h-[40px]"
           >
             Create your workspace
             <ArrowRight size={14} />

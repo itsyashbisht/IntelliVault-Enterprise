@@ -1,7 +1,7 @@
-import { drizzle } from "drizzle-orm/neon-serverless";
+import * as schema from "@/schema";
 import { Pool } from "@neondatabase/serverless";
 import { config } from "dotenv";
-import * as schema from "@/schema";
+import { drizzle } from "drizzle-orm/neon-serverless";
 
 config({ path: ".env.local" });
 

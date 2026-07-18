@@ -5,96 +5,99 @@
    bg-canvas, text-ink, border-hairline etc. all work from here.
    ──────────────────────────────────────────────────────────── */
 @theme {
-    /* Colors — Surfaces */
-    --color-canvas: #010102;
-    --color-surface-1: #0f1011;
-    --color-surface-2: #141516;
-    --color-surface-3: #18191a;
-    --color-surface-4: #191a1b;
+  /* Colors — Surfaces */
+  --color-canvas: #010102;
+  --color-surface-1: #0f1011;
+  --color-surface-2: #141516;
+  --color-surface-3: #18191a;
+  --color-surface-4: #191a1b;
 
-    /* Colors — Text */
-    --color-ink: #f7f8f8;
-    --color-ink-muted: #d0d6e0;
-    --color-ink-subtle: #8a8f98;
-    --color-ink-tertiary: #62666d;
+  /* Colors — Text */
+  --color-ink: #f7f8f8;
+  --color-ink-muted: #d0d6e0;
+  --color-ink-subtle: #8a8f98;
+  --color-ink-tertiary: #62666d;
 
-    /* Colors — Borders */
-    --color-hairline: #23252a;
-    --color-hairline-strong: #34343a;
-    --color-hairline-tertiary: #3e3e44;
+  /* Colors — Borders */
+  --color-hairline: #23252a;
+  --color-hairline-strong: #34343a;
+  --color-hairline-tertiary: #3e3e44;
 
-    /* Colors — Brand */
-    --color-primary: #5e6ad2;
-    --color-primary-hover: #828fff;
-    --color-primary-focus: #5e69d1;
+  /* Colors — Brand */
+  --color-primary: #5e6ad2;
+  --color-primary-hover: #828fff;
+  --color-primary-focus: #5e69d1;
 
-    /* Colors — Semantic */
-    --color-success: #27a644;
-    --color-error: #e54d2e;
-    --color-warning: #ffb224;
+  /* Colors — Semantic */
+  --color-success: #27a644;
+  --color-error: #e54d2e;
+  --color-warning: #ffb224;
 
-    /* Border Radius */
-    --radius-xs: 4px;
-    --radius-sm: 6px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
-    --radius-xxl: 24px;
-    --radius-pill: 9999px;
+  /* Border Radius */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-xxl: 24px;
+  --radius-pill: 9999px;
 
-    /* Fonts */
-    --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "SF Pro Text", sans-serif;
-    --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
+  /* Fonts */
+  --font-sans:
+    "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "SF Pro Text",
+    sans-serif;
+  --font-mono:
+    "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, monospace;
 }
 
 /* ─── Extra Tokens (CSS only, not needed as Tailwind utilities)
    ──────────────────────────────────────────────────────────── */
 :root {
-    /* Subtle / opacity variants */
-    --color-primary-subtle: rgba(94, 106, 210, 0.12);
-    --color-success-subtle: rgba(39, 166, 68, 0.12);
-    --color-error-subtle: rgba(229, 77, 46, 0.12);
-    --color-warning-subtle: rgba(255, 178, 36, 0.12);
+  /* Subtle / opacity variants */
+  --color-primary-subtle: rgba(94, 106, 210, 0.12);
+  --color-success-subtle: rgba(39, 166, 68, 0.12);
+  --color-error-subtle: rgba(229, 77, 46, 0.12);
+  --color-warning-subtle: rgba(255, 178, 36, 0.12);
 
-    /* Typography scale */
-    --text-display-xl: 80px;
-    --text-display-lg: 56px;
-    --text-display-md: 40px;
-    --text-headline: 28px;
-    --text-card-title: 22px;
-    --text-subhead: 20px;
-    --text-body-lg: 18px;
-    --text-body: 16px;
-    --text-body-sm: 14px;
-    --text-caption: 12px;
-    --text-eyebrow: 13px;
-    --text-mono: 13px;
+  /* Typography scale */
+  --text-display-xl: 80px;
+  --text-display-lg: 56px;
+  --text-display-md: 40px;
+  --text-headline: 28px;
+  --text-card-title: 22px;
+  --text-subhead: 20px;
+  --text-body-lg: 18px;
+  --text-body: 16px;
+  --text-body-sm: 14px;
+  --text-caption: 12px;
+  --text-eyebrow: 13px;
+  --text-mono: 13px;
 
-    /* Letter spacing */
-    --tracking-display-xl: -0.0375em;
-    --tracking-display-lg: -0.032em;
-    --tracking-display-md: -0.025em;
-    --tracking-headline: -0.021em;
-    --tracking-card-title: -0.018em;
-    --tracking-subhead: -0.01em;
-    --tracking-body: -0.003em;
-    --tracking-eyebrow: 0.031em;
+  /* Letter spacing */
+  --tracking-display-xl: -0.0375em;
+  --tracking-display-lg: -0.032em;
+  --tracking-display-md: -0.025em;
+  --tracking-headline: -0.021em;
+  --tracking-card-title: -0.018em;
+  --tracking-subhead: -0.01em;
+  --tracking-body: -0.003em;
+  --tracking-eyebrow: 0.031em;
 
-    /* Line heights */
-    --leading-tight: 1.05;
-    --leading-display: 1.10;
-    --leading-heading: 1.20;
-    --leading-body: 1.50;
-    --leading-relaxed: 1.70;
+  /* Line heights */
+  --leading-tight: 1.05;
+  --leading-display: 1.1;
+  --leading-heading: 1.2;
+  --leading-body: 1.5;
+  --leading-relaxed: 1.7;
 
-    /* Transitions */
-    --transition-fast: 100ms ease;
-    --transition-base: 150ms ease;
-    --transition-slow: 250ms ease;
+  /* Transitions */
+  --transition-fast: 100ms ease;
+  --transition-base: 150ms ease;
+  --transition-slow: 250ms ease;
 
-    /* Layout */
-    --sidebar-width: 240px;
-    --topnav-height: 56px;
+  /* Layout */
+  --sidebar-width: 240px;
+  --topnav-height: 56px;
 }
 
 /* ─── Base Styles ────────────────────────────────────────────
@@ -102,21 +105,21 @@
    already handles that. Adding it again breaks utility classes.
    ──────────────────────────────────────────────────────────── */
 html {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
-    scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
 }
 
 body {
-    font-family: var(--font-sans);
-    font-size: var(--text-body);
-    font-weight: 400;
-    line-height: var(--leading-body);
-    letter-spacing: var(--tracking-body);
-    color: var(--color-ink);
-    background-color: var(--color-canvas);
-    min-height: 100dvh;
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  font-weight: 400;
+  line-height: var(--leading-body);
+  letter-spacing: var(--tracking-body);
+  color: var(--color-ink);
+  background-color: var(--color-canvas);
+  min-height: 100dvh;
 }
 
 /* ─── Typography ─────────────────────────────────────────────
@@ -124,279 +127,290 @@ body {
    Use .page-title, .section-title classes instead.
    ──────────────────────────────────────────────────────────── */
 .page-title {
-    font-size: 22px;
-    font-weight: 600;
-    line-height: 1.2;
-    letter-spacing: -0.018em;
-    color: var(--color-ink);
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.018em;
+  color: var(--color-ink);
 }
 
 .section-title {
-    font-size: 28px;
-    font-weight: 600;
-    line-height: var(--leading-heading);
-    letter-spacing: var(--tracking-headline);
-    color: var(--color-ink);
+  font-size: 28px;
+  font-weight: 600;
+  line-height: var(--leading-heading);
+  letter-spacing: var(--tracking-headline);
+  color: var(--color-ink);
 }
 
 .text-eyebrow {
-    font-size: var(--text-eyebrow);
-    font-weight: 500;
-    letter-spacing: var(--tracking-eyebrow);
-    text-transform: uppercase;
-    color: var(--color-ink-subtle);
+  font-size: var(--text-eyebrow);
+  font-weight: 500;
+  letter-spacing: var(--tracking-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-ink-subtle);
 }
 
 /* ─── Links ──────────────────────────────────────────────────*/
 a {
-    color: var(--color-primary);
-    text-decoration: none;
-    transition: color var(--transition-base);
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-base);
 }
 
 a:hover {
-    color: var(--color-primary-hover);
+  color: var(--color-primary-hover);
 }
 
 /* Sidebar links — inherit color, no blue default */
 aside a {
-    color: inherit;
-    text-decoration: none;
+  color: inherit;
+  text-decoration: none;
 }
 
 /* ─── Code ───────────────────────────────────────────────────*/
-code, kbd, pre, samp {
-    font-family: var(--font-mono);
-    font-size: var(--text-mono);
+code,
+kbd,
+pre,
+samp {
+  font-family: var(--font-mono);
+  font-size: var(--text-mono);
 }
 
 pre {
-    background-color: var(--color-surface-1);
-    border: 1px solid var(--color-hairline);
-    border-radius: var(--radius-md);
-    padding: 16px;
-    overflow-x: auto;
+  background-color: var(--color-surface-1);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  padding: 16px;
+  overflow-x: auto;
 }
 
 code {
-    background-color: var(--color-surface-1);
-    border: 1px solid var(--color-hairline);
-    border-radius: var(--radius-xs);
-    padding: 2px 6px;
-    color: var(--color-ink-muted);
+  background-color: var(--color-surface-1);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-xs);
+  padding: 2px 6px;
+  color: var(--color-ink-muted);
 }
 
 pre code {
-    background: none;
-    border: none;
-    padding: 0;
+  background: none;
+  border: none;
+  padding: 0;
 }
 
 /* ─── Forms ──────────────────────────────────────────────────*/
 button {
-    font-family: var(--font-sans);
-    cursor: pointer;
+  font-family: var(--font-sans);
+  cursor: pointer;
 }
 
 button:disabled {
-    cursor: not-allowed;
-    opacity: 0.4;
+  cursor: not-allowed;
+  opacity: 0.4;
 }
 
-input, textarea, select {
-    font-family: var(--font-sans);
-    font-size: var(--text-body);
-    color: var(--color-ink);
-    background-color: var(--color-surface-1);
-    border: 1px solid var(--color-hairline);
-    border-radius: var(--radius-md);
-    padding: 8px 12px;
-    width: 100%;
-    outline: none;
-    transition: border-color var(--transition-base);
+input,
+textarea,
+select {
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  color: var(--color-ink);
+  background-color: var(--color-surface-1);
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  width: 100%;
+  outline: none;
+  transition: border-color var(--transition-base);
 }
 
 input::placeholder,
 textarea::placeholder {
-    color: var(--color-ink-tertiary);
+  color: var(--color-ink-tertiary);
 }
 
 input:focus,
 textarea:focus,
 select:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 2px rgba(94, 106, 210, 0.20);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 2px rgba(94, 106, 210, 0.2);
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────*/
 ::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--color-canvas);
+  background: var(--color-canvas);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--color-hairline-strong);
-    border-radius: var(--radius-pill);
+  background: var(--color-hairline-strong);
+  border-radius: var(--radius-pill);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(--color-hairline-tertiary);
+  background: var(--color-hairline-tertiary);
 }
 
 * {
-    scrollbar-width: thin;
-    scrollbar-color: var(--color-hairline-strong) var(--color-canvas);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-hairline-strong) var(--color-canvas);
 }
 
 /* ─── Selection ──────────────────────────────────────────────*/
 ::selection {
-    background-color: rgba(94, 106, 210, 0.25);
-    color: var(--color-ink);
+  background-color: rgba(94, 106, 210, 0.25);
+  color: var(--color-ink);
 }
 
 /* ─── Focus ──────────────────────────────────────────────────*/
 :focus-visible {
-    outline: 2px solid rgba(94, 106, 210, 0.50);
-    outline-offset: 2px;
-    border-radius: var(--radius-sm);
+  outline: 2px solid rgba(94, 106, 210, 0.5);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
 /* ─── Media ──────────────────────────────────────────────────*/
-img, svg, video {
-    display: block;
-    max-width: 100%;
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
 }
 
-ul, ol {
-    list-style: none;
+ul,
+ol {
+  list-style: none;
 }
 
 /* ─── Animations ─────────────────────────────────────────────*/
 @keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(6px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fade-in-fast {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes shimmer {
-    from {
-        background-position: -200% center;
-    }
-    to {
-        background-position: 200% center;
-    }
+  from {
+    background-position: -200% center;
+  }
+  to {
+    background-position: 200% center;
+  }
 }
 
 @keyframes progress {
-    0% {
-        width: 0%;
-        margin-left: 0;
-    }
-    50% {
-        width: 70%;
-        margin-left: 0;
-    }
-    100% {
-        width: 0%;
-        margin-left: 100%;
-    }
+  0% {
+    width: 0%;
+    margin-left: 0;
+  }
+  50% {
+    width: 70%;
+    margin-left: 0;
+  }
+  100% {
+    width: 0%;
+    margin-left: 100%;
+  }
 }
 
 .animate-fade-in {
-    animation: fade-in 200ms ease both;
+  animation: fade-in 200ms ease both;
 }
 
 .animate-fade-in-fast {
-    animation: fade-in-fast 150ms ease both;
+  animation: fade-in-fast 150ms ease both;
 }
 
 .skeleton {
-    background: linear-gradient(
-            90deg,
-            var(--color-surface-1) 25%,
-            var(--color-surface-2) 50%,
-            var(--color-surface-1) 75%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 1.5s ease infinite;
-    border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-1) 25%,
+    var(--color-surface-2) 50%,
+    var(--color-surface-1) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease infinite;
+  border-radius: var(--radius-sm);
 }
 
 /* ─── Component utilities ────────────────────────────────────
    Reusable base classes — extend with Tailwind in JSX.
    ──────────────────────────────────────────────────────────── */
 .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background-color: var(--color-primary);
-    color: #ffffff;
-    font-size: 14px;
-    font-weight: 500;
-    border-radius: var(--radius-md);
-    padding: 8px 14px;
-    min-height: 36px;
-    transition: background-color var(--transition-base);
-    white-space: nowrap;
-    border: none;
-    cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  min-height: 36px;
+  transition: background-color var(--transition-base);
+  white-space: nowrap;
+  border: none;
+  cursor: pointer;
 }
 
 .btn-primary:hover {
-    background-color: var(--color-primary-hover);
+  background-color: var(--color-primary-hover);
 }
 
 .btn-primary:active {
-    background-color: var(--color-primary-focus);
+  background-color: var(--color-primary-focus);
 }
 
 .btn-secondary {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background-color: var(--color-surface-1);
-    color: var(--color-ink);
-    font-size: 14px;
-    font-weight: 500;
-    border: 1px solid var(--color-hairline);
-    border-radius: var(--radius-md);
-    padding: 8px 14px;
-    min-height: 36px;
-    transition: background-color var(--transition-base),
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: var(--color-surface-1);
+  color: var(--color-ink);
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--color-hairline);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  min-height: 36px;
+  transition:
+    background-color var(--transition-base),
     border-color var(--transition-base);
-    white-space: nowrap;
-    cursor: pointer;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 .btn-secondary:hover {
-    background-color: var(--color-surface-2);
-    border-color: var(--color-hairline-strong);
+  background-color: var(--color-surface-2);
+  border-color: var(--color-hairline-strong);
 }
 
 /* ─── Reduced Motion ─────────────────────────────────────────*/
 @media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-    }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }

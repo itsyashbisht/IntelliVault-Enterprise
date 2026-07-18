@@ -1,5 +1,5 @@
-import { embed, embedMany } from "ai";
 import { google } from "@ai-sdk/google";
+import { embed, embedMany } from "ai";
 
 export async function generateEmbedding(text: string) {
   const input = text.replaceAll("\n", " ");

@@ -84,7 +84,7 @@ The marketing surface treats Display and Text as one continuous voice; the famil
 ### Hierarchy
 
 | Token                     | Size | Weight | Line Height | Letter Spacing | Use                                         |
-|---------------------------|------|--------|-------------|----------------|---------------------------------------------|
+| ------------------------- | ---- | ------ | ----------- | -------------- | ------------------------------------------- |
 | `{typography.display-xl}` | 80px | 600    | 1.05        | -3.0px         | Largest hero headline                       |
 | `{typography.display-lg}` | 56px | 600    | 1.10        | -1.8px         | Section opener headlines                    |
 | `{typography.display-md}` | 40px | 600    | 1.15        | -1.0px         | Sub-section headlines                       |
@@ -141,7 +141,7 @@ panel, generous `{spacing.lg}` 24px gaps between content blocks; `{spacing.secti
 ## Elevation & Depth
 
 | Level              | Treatment                                                          | Use                                      |
-|--------------------|--------------------------------------------------------------------|------------------------------------------|
+| ------------------ | ------------------------------------------------------------------ | ---------------------------------------- |
 | 0 (flat)           | No shadow, no border                                               | Default for body type, hero text, footer |
 | 1 (charcoal lift)  | `{colors.surface-1}` background on canvas, 1px `{colors.hairline}` | Default cards, product panels            |
 | 2 (surface-2 lift) | `{colors.surface-2}` background, 1px `{colors.hairline-strong}`    | Featured pricing card, hovered cards     |
@@ -162,7 +162,7 @@ Linear's depth is carried by surface ladder + hairline borders. The brand resist
 ### Border Radius Scale
 
 | Token            | Value  | Use                                             |
-|------------------|--------|-------------------------------------------------|
+| ---------------- | ------ | ----------------------------------------------- |
 | `{rounded.xs}`   | 4px    | Small chips, status badges                      |
 | `{rounded.sm}`   | 6px    | Inline tags                                     |
 | `{rounded.md}`   | 8px    | All buttons, form inputs                        |
@@ -305,7 +305,7 @@ Sign in") + `button-primary` ("Get started") pair right.
 ### Breakpoints
 
 | Name       | Width  | Key Changes                                         |
-|------------|--------|-----------------------------------------------------|
+| ---------- | ------ | --------------------------------------------------- |
 | Desktop-XL | 1440px | Default desktop layout                              |
 | Desktop    | 1280px | Card grid 3-up maintained                           |
 | Tablet     | 1024px | Card grid 3-up → 2-up                               |
