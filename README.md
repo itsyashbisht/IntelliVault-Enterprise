@@ -37,13 +37,17 @@ Most "chat with your PDF" demos are single-user, single-document, zero access co
 |---|---|
 | **Workspace isolation** | Documents, chats, and members scoped per workspace — no cross-tenant leakage |
 | **RBAC** | Owner / Editor / Viewer roles enforced on every API route |
-| **Document ingestion** | PDF upload → extraction → chunking → embedding → indexed storage |
+| **Multi-format ingestion** | PDF, DOCX, TXT, and Markdown — parsed, chunked, embedded, and indexed automatically |
+| **Contextual chunking** | Each chunk is prefixed with document name + detected section heading before embedding — better vector placement without polluting display text |
 | **Hybrid RAG search** | pgvector semantic search + Postgres BM25 full-text search, merged with Reciprocal Rank Fusion |
+| **Query rewriting** | Follow-up questions ("what about section 3?") are rewritten into standalone queries using conversation history — fixes pronoun/reference retrieval failures |
 | **Tool-calling agent** | The LLM autonomously decides when to search the knowledge base |
 | **Source citations** | Every answer shows which documents and chunks backed it |
+| **LLM-as-judge evaluation** | Every response is scored on context relevance, faithfulness, and answer relevance — results surfaced in a per-workspace eval dashboard |
 | **Session persistence** | Conversations saved to DB, titled by LLM, resumable from history |
 | **Email invites** | Invite collaborators by email — works with or without an existing account |
 | **Streaming responses** | Token-by-token streaming via Vercel AI SDK |
+| **Toast notifications** | Sonner-powered toast feedback on every user action — uploads, deletions, invites, settings changes |
 | **Audit logging** | Every workspace action logged with actor, timestamp, and metadata |
 
 ---
@@ -83,14 +87,15 @@ flowchart LR
 
 ### 1 · Ingestion — documents in
 
-Every uploaded PDF goes through this pipeline before it becomes searchable. Two indexes are built per chunk: a **768-dim embedding** (for meaning) and a **tsvector** (for exact keywords).
+Every uploaded document goes through this pipeline before it becomes searchable. Two indexes are built per chunk: a **768-dim embedding** (for meaning) and a **tsvector** (for exact keywords). Before embedding, each chunk is **contextually enriched** with the document name and detected section heading — improving vector placement without altering the stored content.
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Segoe UI, sans-serif","fontSize":"13px","primaryColor":"#101113","primaryTextColor":"#e6e8ea","primaryBorderColor":"#2b2e34","lineColor":"#5a5f68","edgeLabelBackground":"#0b0c0e"},"flowchart":{"curve":"basis","nodeSpacing":42,"rankSpacing":52}}}%%
 flowchart TD
-    A(["PDF upload"]) --> B["text extraction<br/><i>unpdf</i>"]
+    A(["document upload<br/><i>PDF · DOCX · TXT · MD</i>"]) --> B["text extraction<br/><i>unpdf · mammoth · raw</i>"]
     B --> C["chunking<br/><i>1000 chars · 200 overlap</i>"]
-    C --> D["semantic index<br/><i>Gemini embedding · 768 dims</i>"]
+    C --> C2["contextual enrichment<br/><i>doc name + section heading</i>"]
+    C2 --> D["semantic index<br/><i>Gemini embedding · 768 dims</i>"]
     C --> E["keyword index<br/><i>Postgres tsvector</i>"]
     D --> F[("chunks<br/><i>pgvector · HNSW</i>")]
     E --> F
@@ -106,7 +111,7 @@ flowchart TD
 
 ### 2 · Retrieval — answers out
 
-When a user asks a question, **two retrievers run in parallel** and their results are fused. Each is good at what the other is bad at:
+When a user asks a question, the query is **rewritten** for standalone clarity, then **two retrievers run in parallel** and their results are fused. Each is good at what the other is bad at:
 
 | Retriever | Finds | Example |
 |---|---|---|
@@ -117,7 +122,8 @@ When a user asks a question, **two retrievers run in parallel** and their result
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Segoe UI, sans-serif","fontSize":"13px","primaryColor":"#101113","primaryTextColor":"#e6e8ea","primaryBorderColor":"#2b2e34","lineColor":"#5a5f68","edgeLabelBackground":"#0b0c0e"},"flowchart":{"curve":"basis","nodeSpacing":42,"rankSpacing":50}}}%%
 flowchart TD
-    A(["user question"]) --> B["LLM agent<br/><i>decides to search</i>"]
+    A(["user question"]) --> QR["query rewrite<br/><i>standalone from history</i>"]
+    QR --> B["LLM agent<br/><i>decides to search</i>"]
     B --> C["searchKnowledgeBase"]
 
     C --> D["vector search<br/><i>cosine similarity · top 20</i>"]
@@ -131,7 +137,8 @@ flowchart TD
 
     F --> G["LLM synthesis<br/><i>grounded in chunks only</i>"]
     G --> H(["streamed answer + citations"])
-    H --> I[("session history")]
+    H --> EV["LLM-as-judge eval<br/><i>relevance · faithfulness · answer</i>"]
+    EV --> I[("session history + scores")]
 
     classDef entry stroke:#5e6ad2,stroke-width:1.5px
     classDef fuse fill:#15161b,stroke:#5e6ad2,stroke-width:1.5px
@@ -240,7 +247,9 @@ All workspace-child tables **cascade-delete** when the parent workspace is remov
 | Embeddings | Google Gemini `gemini-embedding-001` (768 dims) |
 | LLM | OpenAI `gpt-4o-mini` via Vercel AI SDK v6 |
 | PDF parsing | unpdf |
+| DOCX parsing | mammoth |
 | Text splitting | LangChain `RecursiveCharacterTextSplitter` |
+| Notifications | Sonner (toast) |
 | Email | Resend + React Email |
 | Styling | Tailwind CSS v4 · Linear-inspired design system |
 
@@ -324,6 +333,7 @@ Open [http://localhost:3000](http://localhost:3000) — sign up, create a worksp
 | `/api/workspaces/[id]/documents/[docId]` | `DELETE` | Owner / Editor |
 | `/api/workspaces/[id]/chat` | `POST` | Member |
 | `/api/workspaces/[id]/chat/sessions` | `POST` `GET` | Member |
+| `/api/workspaces/[id]/eval` | `GET` | Owner / Editor |
 | `/api/invites/[token]` | `POST` | Authenticated |
 
 ---
@@ -339,18 +349,24 @@ src/
 │   │   └── workspace/[id]/
 │   │       ├── documents/    # Upload + document list
 │   │       ├── chat/         # RAG chat + session history
+│   │       ├── eval/         # LLM-as-judge evaluation dashboard
 │   │       ├── members/      # Member management + invites
 │   │       └── settings/     # Rename + danger zone
-│   └── api/                  # Workspace, document, chat, invite routes
+│   └── api/                  # Workspace, document, chat, eval, invite routes
 ├── components/
 │   ├── documents/            # UploadDropzone, DocumentTable, StatusBadge
+│   ├── eval/                 # ScoreCard, SessionTable, WorstSessions
+│   ├── marketing/            # Landing page components
 │   ├── workspace-home/       # StatsCard, RecentDocuments, RecentChats
 │   └── ai-elements/          # Chat UI primitives
 ├── schema/                   # Drizzle table definitions + relations
 ├── lib/
 │   ├── search.ts             # Hybrid search: vector + BM25 + RRF fusion
+│   ├── rewrite-query.ts      # Conversational query rewriting
+│   ├── evals.ts              # LLM-as-judge scoring (context relevance, faithfulness, answer relevance)
 │   ├── embedding.ts          # Gemini embedding generation
-│   └── chunking.ts           # LangChain text splitter
+│   ├── chunking.ts           # LangChain text splitter + contextual enrichment
+│   └── parsers/              # Multi-format document parsers (PDF, DOCX, TXT, MD)
 └── emails/                   # React Email templates
 ```
 
@@ -358,11 +374,14 @@ src/
 
 ## Roadmap
 
-- [x] **Hybrid search** — pgvector + BM25 full-text, fused with Reciprocal Rank Fusion ✅ *shipped*
-- [ ] **Query rewriting** — rewrite follow-up questions into standalone queries using conversation history (fixes "it" / "that" retrieval failures)
-- [ ] **Contextual chunking** — prepend document title + section heading to each chunk before embedding
+- [x] **Hybrid search** — pgvector + BM25 full-text, fused with Reciprocal Rank Fusion
+- [x] **Query rewriting** — rewrite follow-up questions into standalone queries using conversation history
+- [x] **Contextual chunking** — prepend document title + section heading to each chunk before embedding
+- [x] **Multi-format ingestion** — PDF, DOCX, TXT, and Markdown support with dedicated parsers
+- [x] **LLM-as-judge evaluation** — score responses on faithfulness, context relevance, and answer relevance in a per-workspace dashboard
+- [x] **Toast notifications** — Sonner-powered feedback on every user action
 - [ ] **Re-ranking** — cross-encoder re-ranker on retrieved chunks for better precision
-- [ ] **LLM-as-judge evaluation** — score responses on faithfulness and relevance, surfaced in a workspace analytics dashboard
+- [ ] **Agentic RAG** — multi-step tool-use chains for complex multi-document reasoning
 
 ---
 
