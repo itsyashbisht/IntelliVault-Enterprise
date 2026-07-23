@@ -1,16 +1,17 @@
 import { db } from "@/lib/db-config";
+import { evaluateRAGResponse } from "@/lib/evals";
 import { searchDocuments } from "@/lib/search";
 import { messages as messagesSchema, workspaceMembers } from "@/schema";
 import { openai } from "@ai-sdk/openai";
 import { auth } from "@clerk/nextjs/server";
 import {
-    InferUITools,
-    UIDataTypes,
-    UIMessage,
-    convertToModelMessages,
-    stepCountIs,
-    streamText,
-    tool,
+  InferUITools,
+  UIDataTypes,
+  UIMessage,
+  convertToModelMessages,
+  stepCountIs,
+  streamText,
+  tool,
 } from "ai";
 import { and, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
@@ -240,6 +241,18 @@ export async function POST(
       );
     }
 
+    // History to pass for rewriting query.
+    const history = messages
+      .slice(-6)
+      .filter((h) => h.role === "assistant" || h.role === "user")
+      .map((h) => ({
+        role: h.role,
+        content: h.parts
+          .filter((p) => p.type === "text")
+          .map((p) => p.text)
+          .join(" "),
+      }));
+
     const tools = {
       searchKnowledgeBase: tool({
         description:
@@ -251,7 +264,12 @@ export async function POST(
         }),
         execute: async ({ query }) => {
           try {
-            const response = await searchDocuments(query, workspaceId, 5);
+            const response = await searchDocuments(
+              history,
+              query,
+              workspaceId,
+              5
+            );
             if (response.length === 0) {
               return "No relevant information found in the knowledge base";
             }
@@ -307,13 +325,40 @@ export async function POST(
       tools,
       system: SYSTEM_PROMPT,
       stopWhen: stepCountIs(5),
-      onEnd: async ({ text }) => {
-        // Save assistant's completed response
-        await db.insert(messagesSchema).values({
-          sessionId,
-          role: "assistant",
-          content: text,
-        });
+      onEnd: async ({ text, steps }) => {
+        const usedChunks = steps
+          .flatMap((s) => s.toolResults ?? [])
+          .flatMap((tr) => (Array.isArray(tr.output) ? tr.output : []))
+          .map((output) => ({
+            content: output.content,
+            source: output.source,
+          }));
+
+        const [scores] = await Promise.all([
+          // RAG evaluation.
+          await evaluateRAGResponse({
+            question: userContent,
+            chunks: usedChunks,
+            answer: text,
+          }),
+          // Save assistant's completed response.
+          await db.insert(messagesSchema).values({
+            sessionId,
+            role: "assistant",
+            content: text,
+          }),
+        ]);
+
+        if (scores) {
+          await db
+            .update(messagesSchema)
+            .set({
+              contextRelevance: scores.contextRelevance.toString(),
+              faithfulness: scores.faithfulness.toString(),
+              answerRelevance: scores.answerRelevance.toString(),
+            })
+            .where(eq(messagesSchema.sessionId, sessionId));
+        }
       },
     });
 

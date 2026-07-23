@@ -1,7 +1,8 @@
+import { generateEmbedding } from "@/lib/embedding";
+import { chunks, documents } from "@/schema";
 import { and, cosineDistance, desc, eq, gt, sql } from "drizzle-orm";
 import { db } from "./db-config";
-import { chunks, documents } from "@/schema";
-import { generateEmbedding } from "@/lib/embedding";
+import { rewriteQuery } from "./rewrite-query";
 
 /*
 -> Hybrid RAG: Retrieval Pipeline.
@@ -41,13 +42,16 @@ export type SearchResult = VectorResult;
 
 // Search
 export async function searchDocuments(
+  history: Array<{ role: string; content: string }>,
   query: string,
   workspaceId: string,
   topK: number = 5,
-  threshold: number = 0.65
+  threshold: number = 0.55
 ): Promise<SearchResult[]> {
+  // Rewrite the query.
+  const rewrittenQuery = await rewriteQuery(query, history);
   // 1. Embed the user query into the same 768-dim space as the stored chunks.
-  const queryEmbedding = await generateEmbedding(query);
+  const queryEmbedding = await generateEmbedding(rewrittenQuery);
 
   // 2. Cosine distance → similarity. Postgres/pgvector gives us DISTANCE
   //    (0 = identical), so we flip it to SIMILARITY (1 = identical).
