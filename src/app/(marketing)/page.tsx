@@ -1,6 +1,12 @@
 "use client";
-import Link from "next/link";
+import IntelliVaultLogo from "@/components/logo";
 import {
+  MockupReveal,
+  Reveal,
+  Stagger,
+  StaggerItem,
+} from "@/components/marketing/reveal";
+import Wordmark from "@/components/workspace-home/wordmark";import {
   ArrowRight,
   ChevronRight,
   FileText,
@@ -10,14 +16,14 @@ import {
   Users,
   Zap,
 } from "lucide-react";
-import IntelliVaultLogo from "@/components/logo";
-import Wordmark from "@/components/workspace-home/wordmark";
-import TopNav from "@/components/top-nav";
+import Link from "next/link";
 
-// ── Fake Product UI Screenshot
+// ── Fake Product UI Screenshot ────────────────────────────────────────────────
 function ProductMockup() {
   return (
-    <div className="bg-[#0f1011] border border-[#23252a] rounded-[16px] p-1.5 shadow-2xl">
+    <div className="relative bg-[#0f1011] border border-[#23252a] rounded-[16px] p-1.5 shadow-2xl">
+      {/* Subtle white edge highlight on the top edge of the lifted panel */}
+      <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
       {/* Browser chrome */}
       <div className="bg-[#141516] rounded-[12px] overflow-hidden">
         <div className="h-9 bg-[#0f1011] border-b border-[#23252a] flex items-center px-4 gap-2">
@@ -163,7 +169,7 @@ function ProductMockup() {
   );
 }
 
-// ── Features
+// ── Features ──────────────────────────────────────────────────────────────────
 const features = [
   {
     icon: FileText,
@@ -172,8 +178,8 @@ const features = [
   },
   {
     icon: Search,
-    title: "Semantic search",
-    desc: "Hybrid vector + keyword search surfaces the most relevant passages — not just keyword matches.",
+    title: "Hybrid search",
+    desc: "Vector similarity fused with BM25 keyword search — finds meanings and exact terms, not just one or the other.",
   },
   {
     icon: MessageSquare,
@@ -188,7 +194,7 @@ const features = [
   {
     icon: Zap,
     title: "Streaming responses",
-    desc: "Token-by-token streaming via Groq's inference infrastructure. No waiting for full responses.",
+    desc: "Token-by-token streaming via the Vercel AI SDK. Answers start appearing the moment they're generated.",
   },
   {
     icon: Shield,
@@ -197,207 +203,223 @@ const features = [
   },
 ];
 
-// ── Main Landing Page
+// ── How it works ──────────────────────────────────────────────────────────────
+const steps = [
+  {
+    step: "01",
+    title: "Upload your documents",
+    desc: "Drag and drop PDFs, Word docs, or Markdown files into your workspace. IntelliVault parses, chunks, and embeds them automatically.",
+  },
+  {
+    step: "02",
+    title: "Ask in plain language",
+    desc: "Type any question. The RAG pipeline embeds your query, retrieves the most relevant chunks, and sends them to the LLM as grounded context.",
+  },
+  {
+    step: "03",
+    title: "Get cited answers",
+    desc: "Responses are grounded strictly in your documents. Every answer shows which source files and pages were used — no hallucinations.",
+  },
+];
+
+// ── Main Landing Page ─────────────────────────────────────────────────────────
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-[#010102] text-[#f7f8f8]">
-      <TopNav />
-
       {/* ── Hero ──────────────────────────────────────────────── */}
-      <section className="pt-36 pb-20 px-6 max-w-[1280px] mx-auto text-center">
+      <section className="pt-22 pb-20 px-6 max-w-[1280px] mx-auto text-center">
         {/* Eyebrow badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#23252a] bg-[#0f1011] text-[11px] font-medium text-[#8a8f98] tracking-[0.4px] uppercase mb-8">
-          <span className="w-1.5 h-1.5 rounded-full bg-[#27a644] animate-pulse" />
-          Enterprise document intelligence
-        </div>
+        <Reveal>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-[#23252a] bg-[#0f1011] text-[11px] font-medium text-[#8a8f98] tracking-[0.4px] uppercase mb-8">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#27a644] animate-pulse" />
+            Enterprise document intelligence
+          </div>
+        </Reveal>
 
         {/* Hero headline */}
-        <h1
-          className="text-[64px] md:text-[80px] font-semibold text-[#f7f8f8] leading-[1.05] mb-6 max-w-4xl mx-auto"
-          style={{ letterSpacing: "-3px" }}
-        >
-          Your documents, <br />
-          <span className="text-[#5e6ad2]">finally searchable</span>
-        </h1>
+        <Reveal delay={0.08}>
+          <h1
+            className="text-[44px] sm:text-[64px] md:text-[80px] font-semibold text-[#f7f8f8] leading-[1.05] mb-6 max-w-4xl mx-auto"
+            style={{ letterSpacing: "-3px" }}
+          >
+            Your documents, <br />
+            <span className="text-[#5e6ad2]">finally searchable</span>
+          </h1>
+        </Reveal>
 
-        <p
-          className="text-[18px] text-[#8a8f98] leading-[1.6] max-w-lg mx-auto mb-10"
-          style={{ letterSpacing: "-0.1px" }}
-        >
-          Upload any document. Ask any question. Get precise, cited answers —
-          powered by retrieval-augmented generation and team workspaces.
-        </p>
+        <Reveal delay={0.16}>
+          <p
+            className="text-[18px] text-[#8a8f98] leading-[1.6] max-w-lg mx-auto mb-10"
+            style={{ letterSpacing: "-0.1px" }}
+          >
+            Upload any document. Ask any question. Get precise, cited answers —
+            powered by retrieval-augmented generation and team workspaces.
+          </p>
+        </Reveal>
 
         {/* CTAs */}
-        <div className="flex items-center justify-center gap-3 flex-wrap mb-4">
-          <Link
-            href="/sign-up"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white text-[14px] font-medium transition-colors min-h-[40px]"
-          >
-            Start for free
-            <ChevronRight size={14} />
-          </Link>
-          <Link
-            href="/sign-in"
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-[#0f1011] hover:bg-[#141516] border border-[#23252a] hover:border-[#34343a] text-[#d0d6e0] text-[14px] font-medium transition-colors min-h-[40px]"
-          >
-            View demo
-          </Link>
-        </div>
-        <p className="text-[12px] text-[#62666d]">
-          No credit card required · Free workspace forever
-        </p>
+        <Reveal delay={0.24}>
+          <div className="flex items-center justify-center gap-3 flex-wrap mb-4">
+            <Link
+              href="/sign-up"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white! text-[14px] font-medium transition-all duration-200 min-h-[40px] hover:-translate-y-px active:translate-y-0"
+            >
+              Start for free
+              <ChevronRight size={14} />
+            </Link>
+            <Link
+              href="/sign-in"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-[#0f1011] hover:bg-[#141516] border border-[#23252a] hover:border-[#34343a] text-[#d0d6e0] text-[14px] font-medium transition-all duration-200 min-h-[40px] hover:-translate-y-px active:translate-y-0"
+            >
+              View demo
+            </Link>
+          </div>
+          <p className="text-[12px] text-[#62666d]">
+            No credit card required · Free workspace forever
+          </p>
+        </Reveal>
       </section>
 
       {/* ── Product screenshot ────────────────────────────────── */}
       <section className="px-6 max-w-[1280px] mx-auto mb-24">
-        <ProductMockup />
+        <MockupReveal>
+          <ProductMockup />
+        </MockupReveal>
       </section>
 
       {/* ── How it works ──────────────────────────────────────── */}
       <section id="how-it-works" className="px-6 max-w-[1280px] mx-auto mb-24">
-        <div className="text-center mb-12">
+        <Reveal className="text-center mb-12">
           <p className="text-[11px] font-medium tracking-[0.4px] uppercase text-[#5e6ad2] mb-3">
             How it works
           </p>
           <h2
-            className="text-[40px] font-semibold text-[#f7f8f8] leading-[1.15] max-w-xl mx-auto"
+            className="text-[32px] md:text-[40px] font-semibold text-[#f7f8f8] leading-[1.15] max-w-xl mx-auto"
             style={{ letterSpacing: "-1px" }}
           >
             From upload to answer in seconds
           </h2>
-        </div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {[
-            {
-              step: "01",
-              title: "Upload your documents",
-              desc: "Drag and drop PDFs, Word docs, or Markdown files into your workspace. IntelliVault parses, chunks, and embeds them automatically.",
-            },
-            {
-              step: "02",
-              title: "Ask in plain language",
-              desc: "Type any question. The RAG pipeline embeds your query, retrieves the most relevant chunks, and sends them to the LLM as grounded context.",
-            },
-            {
-              step: "03",
-              title: "Get cited answers",
-              desc: "Responses are grounded strictly in your documents. Every answer shows which source files and pages were used — no hallucinations.",
-            },
-          ].map(({ step, title, desc }) => (
-            <div
-              key={step}
-              className="bg-[#0f1011] border border-[#23252a] rounded-[12px] p-6 hover:bg-[#141516] hover:border-[#34343a] transition-colors"
-            >
-              <p className="text-[11px] font-mono text-[#5e6ad2] mb-4 tracking-widest">
-                {step}
-              </p>
-              <h3
-                className="text-[16px] font-semibold text-[#f7f8f8] mb-2"
-                style={{ letterSpacing: "-0.3px" }}
-              >
-                {title}
-              </h3>
-              <p className="text-[13px] text-[#8a8f98] leading-relaxed">
-                {desc}
-              </p>
-            </div>
+        <Stagger className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {steps.map(({ step, title, desc }) => (
+            <StaggerItem key={step}>
+              <div className="relative h-full bg-[#0f1011] border border-[#23252a] rounded-[12px] p-6 hover:bg-[#141516] hover:border-[#34343a] transition-colors duration-200 overflow-hidden">
+                <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+                <p className="text-[11px] font-mono text-[#5e6ad2] mb-4 tracking-widest">
+                  {step}
+                </p>
+                <h3
+                  className="text-[16px] font-semibold text-[#f7f8f8] mb-2"
+                  style={{ letterSpacing: "-0.3px" }}
+                >
+                  {title}
+                </h3>
+                <p className="text-[13px] text-[#8a8f98] leading-relaxed">
+                  {desc}
+                </p>
+              </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </section>
 
       {/* ── Features grid ─────────────────────────────────────── */}
       <section id="features" className="px-6 max-w-[1280px] mx-auto mb-24">
-        <div className="text-center mb-12">
+        <Reveal className="text-center mb-12">
           <p className="text-[11px] font-medium tracking-[0.4px] uppercase text-[#5e6ad2] mb-3">
             Capabilities
           </p>
           <h2
-            className="text-[40px] font-semibold text-[#f7f8f8] leading-[1.15]"
+            className="text-[32px] md:text-[40px] font-semibold text-[#f7f8f8] leading-[1.15]"
             style={{ letterSpacing: "-1px" }}
           >
             Everything your team needs
           </h2>
-        </div>
+        </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <Stagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {features.map(({ icon: Icon, title, desc }) => (
-            <div
-              key={title}
-              className="bg-[#0f1011] border border-[#23252a] rounded-[12px] p-6 hover:bg-[#141516] hover:border-[#34343a] transition-all group"
-            >
-              <div className="w-8 h-8 rounded-[8px] bg-[#23252a] flex items-center justify-center mb-4 group-hover:bg-[#5e6ad2]/10 group-hover:border group-hover:border-[#5e6ad2]/20 transition-colors">
-                <Icon
-                  size={15}
-                  className="text-[#8a8f98] group-hover:text-[#5e6ad2] transition-colors"
-                />
+            <StaggerItem key={title}>
+              <div className="h-full bg-[#0f1011] border border-[#23252a] rounded-[12px] p-6 hover:bg-[#141516] hover:border-[#34343a] hover:-translate-y-0.5 transition-all duration-200 group">
+                <div className="w-8 h-8 rounded-[8px] bg-[#23252a] flex items-center justify-center mb-4 group-hover:bg-[#5e6ad2]/10 transition-colors duration-200">
+                  <Icon
+                    size={15}
+                    className="text-[#8a8f98] group-hover:text-[#5e6ad2] transition-colors duration-200"
+                  />
+                </div>
+                <h3
+                  className="text-[14px] font-semibold text-[#f7f8f8] mb-1.5"
+                  style={{ letterSpacing: "-0.2px" }}
+                >
+                  {title}
+                </h3>
+                <p className="text-[13px] text-[#8a8f98] leading-relaxed">
+                  {desc}
+                </p>
               </div>
-              <h3
-                className="text-[14px] font-semibold text-[#f7f8f8] mb-1.5"
-                style={{ letterSpacing: "-0.2px" }}
-              >
-                {title}
-              </h3>
-              <p className="text-[13px] text-[#8a8f98] leading-relaxed">
-                {desc}
-              </p>
-            </div>
+            </StaggerItem>
           ))}
-        </div>
+        </Stagger>
       </section>
 
       {/* ── Tech stack strip ──────────────────────────────────── */}
       <section className="px-6 max-w-[1280px] mx-auto mb-24">
-        <div className="border border-[#23252a] rounded-[12px] p-8 bg-[#0f1011]">
-          <p className="text-[11px] font-medium tracking-[0.4px] uppercase text-[#62666d] text-center mb-6">
-            Built on
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-6">
-            {[
-              "Next.js 16",
-              "Neon pgvector",
-              "Groq LLaMA",
-              "Gemini Embeddings",
-              "Drizzle ORM",
-              "Vercel AI SDK",
-              "Clerk Auth",
-            ].map((tech) => (
-              <span
-                key={tech}
-                className="text-[13px] font-mono text-[#62666d] hover:text-[#8a8f98] transition-colors"
-              >
-                {tech}
-              </span>
-            ))}
+        <Reveal>
+          <div className="relative border border-[#23252a] rounded-[12px] p-8 bg-[#0f1011] overflow-hidden">
+            <div className="pointer-events-none absolute inset-x-8 top-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+            <p className="text-[11px] font-medium tracking-[0.4px] uppercase text-[#62666d] text-center mb-6">
+              Built on
+            </p>
+            <div className="flex flex-wrap items-center justify-center gap-6">
+              {[
+                "Next.js 16",
+                "Neon pgvector",
+                "GPT-4o-mini",
+                "Gemini Embeddings",
+                "Drizzle ORM",
+                "Vercel AI SDK",
+                "Clerk Auth",
+              ].map((tech) => (
+                <span
+                  key={tech}
+                  className="text-[13px] font-mono text-[#62666d] hover:text-[#8a8f98] transition-colors"
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
+        </Reveal>
       </section>
 
       {/* ── CTA Banner ────────────────────────────────────────── */}
       <section className="px-6 max-w-[1280px] mx-auto pb-24">
-        <div className="bg-[#0f1011] border border-[#23252a] rounded-[12px] p-12 text-center">
-          <div className="flex items-center justify-center mb-6">
-            <Wordmark size="lg" />
+        <Reveal>
+          <div className="relative bg-[#0f1011] border border-[#23252a] rounded-[12px] p-12 text-center overflow-hidden">
+            <div className="pointer-events-none absolute inset-x-12 top-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="flex items-center justify-center mb-6">
+              <Wordmark size="lg" />
+            </div>
+            <h2
+              className="text-[28px] font-semibold text-[#f7f8f8] mb-3 max-w-md mx-auto"
+              style={{ letterSpacing: "-0.6px" }}
+            >
+              Ready to unlock your documents?
+            </h2>
+            <p className="text-[15px] text-[#8a8f98] mb-8 max-w-sm mx-auto">
+              Create a workspace, upload your files, and start getting answers
+              in under two minutes.
+            </p>
+            <Link
+              href="/sign-up"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white! text-[14px] font-medium transition-all duration-200 min-h-[40px] hover:-translate-y-px active:translate-y-0"
+            >
+              Create your workspace
+              <ArrowRight size={14} />
+            </Link>
           </div>
-          <h2
-            className="text-[28px] font-semibold text-[#f7f8f8] mb-3 max-w-md mx-auto"
-            style={{ letterSpacing: "-0.6px" }}
-          >
-            Ready to unlock your documents?
-          </h2>
-          <p className="text-[15px] text-[#8a8f98] mb-8 max-w-sm mx-auto">
-            Create a workspace, upload your files, and start getting answers in
-            under two minutes.
-          </p>
-          <Link
-            href="/sign-up"
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white! text-[14px] font-medium transition-colors min-h-[40px]"
-          >
-            Create your workspace
-            <ArrowRight size={14} />
-          </Link>
-        </div>
+        </Reveal>
       </section>
 
       {/* ── Footer ────────────────────────────────────────────── */}
@@ -416,7 +438,7 @@ export default function LandingPage() {
             ))}
           </div>
           <p className="text-[12px] text-[#62666d]">
-            © 2025 IntelliVault. Built by Yash Bisht.
+            © 2026 IntelliVault. Built by Yash Bisht.
           </p>
         </div>
       </footer>

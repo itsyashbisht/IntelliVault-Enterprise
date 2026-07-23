@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import UploadDropzone from "@/components/documents/upload-dropzone";
+import { toast } from "sonner";
 
 export default function DocumentsClient({
   workspaceId,
@@ -12,7 +13,10 @@ export default function DocumentsClient({
   return (
     <UploadDropzone
       workspaceId={workspaceId}
-      onSuccess={() => router.refresh()}
+      onSuccess={() => {
+        router.refresh();
+        toast.success("Document Uploaded successfully!");
+      }}
     />
   );
 }

@@ -5,6 +5,7 @@ import StatusBadge from "@/components/documents/status-badge";
 import { useState } from "react";
 import DeleteDocumentModal from "./delete-document-modal";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export type Document = {
   id: string;
@@ -115,6 +116,7 @@ export default function DocumentRow({
           onSuccess={() => {
             setIsModalOpen(false);
             router.refresh();
+            toast.success("Document removed successfully!")
           }}
         />
       </span>

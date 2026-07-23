@@ -28,6 +28,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { Fragment, useState } from "react";
+import { toast } from "sonner";
 
 interface ChatUIProps {
   workspaceId: string;
@@ -82,9 +83,9 @@ export function ChatUI({
 
   const handleSubmit = async (message: PromptInputMessage) => {
     if (!message.text?.trim()) return;
-
     let activeSessionId = currentSessionId;
-
+    
+    setInput("")
     setSessionError(null);
     try {
       if (!activeSessionId) {
@@ -132,11 +133,9 @@ export function ChatUI({
         );
       }
     } catch (error) {
-      console.error("Failed to create session:", error);
-
-      setSessionError(
-        error instanceof Error ? error.message : "Something went wrong"
-      );
+      const msg = error instanceof Error ? error.message : "Something went wrong";
+      toast.error(msg);
+      setSessionError(msg);
     } finally {
       setInput("");
     }

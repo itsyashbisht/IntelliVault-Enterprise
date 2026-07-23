@@ -4,6 +4,7 @@ import { Workspace } from "@/schema";
 import { Check, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface GeneralSettingsProps {
   workspace: Workspace;
@@ -45,17 +46,18 @@ export default function GeneralSettings({ workspace }: GeneralSettingsProps) {
       }
 
       setSaveState("success");
+      toast.success("Workspace name updated.");
       router.refresh();
 
       // Reset back to idle after showing success
       setTimeout(() => setSaveState("idle"), 2000);
     } catch (err) {
       setSaveState("idle");
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to update workspace name. Please try again."
-      );
+      const msg = err instanceof Error
+        ? err.message
+        : "Failed to update workspace name. Please try again.";
+      toast.error(msg);
+      setError(msg);
     }
   };
 

@@ -1,6 +1,7 @@
 "use client";
 import { Loader2, TriangleAlert, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface DeleteWorkspaceModalProps {
   open: boolean;
@@ -69,13 +70,14 @@ export default function DeleteWorkspaceModal({
         throw new Error(data.message ?? "Failed to delete workspace.");
       }
 
+      toast.success("Workspace deleted.");
       onSuccess(); // caller handles redirect
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to delete the workspace. Please try again."
-      );
+      const msg = err instanceof Error
+        ? err.message
+        : "Failed to delete the workspace. Please try again.";
+      toast.error(msg);
+      setError(msg);
     } finally {
       setIsLoading(false);
     }

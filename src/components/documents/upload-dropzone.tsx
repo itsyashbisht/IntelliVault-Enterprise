@@ -1,6 +1,8 @@
 "use client";
 import React, { useRef, useState } from "react";
 import { AlertCircle, Loader2, UploadCloud } from "lucide-react";
+import { SUPPORTED_TYPES } from "@/lib/parsers/index";
+import { toast } from "sonner";
 
 type DropzoneState = "idle" | "dragover" | "uploading" | "error";
 
@@ -41,15 +43,22 @@ export default function UploadDropzone({
   const handleFile = async (file: File) => {
     // Validate size
     if (file.size > 50 * 1024 * 1024) {
+      toast.error("File exceeds 50 MB limit.");
       setErrorMessage("File exceeds 50 MB limit.");
       setState("error");
       return;
     }
 
     // Validate type
-    const allowed = ["application/pdf", "text/plain", "text/markdown"];
+    const allowed = [
+      "application/pdf",
+      "text/plain",
+      "text/markdown",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
     if (!allowed.includes(file.type)) {
-      setErrorMessage("Only PDF, TXT, or Markdown files are supported.");
+      toast.error("Only PDF, Docx, TXT, or Markdown files are supported.");
+      setErrorMessage("Only PDF,Docx, TXT, or Markdown files are supported.");
       setState("error");
       return;
     }
@@ -72,7 +81,9 @@ export default function UploadDropzone({
       setState("idle");
       setFileName("");
     } catch (err: any) {
-      setErrorMessage(err.message ?? "Something went wrong.");
+      const msg = err.message ?? "Something went wrong.";
+      toast.error(msg);
+      setErrorMessage(msg);
       setState("error");
     }
   };

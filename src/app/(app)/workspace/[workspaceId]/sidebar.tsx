@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { BarChart2 } from "lucide-react";
 
 interface SidebarProps {
   workspaceId: string;
@@ -55,6 +56,12 @@ export default function Sidebar({ workspaceId, workspaceName }: SidebarProps) {
       label: "Settings",
       href: `/workspace/${workspaceId}/settings`,
       icon: Settings,
+      exact: false,
+    },
+    {
+      label: "Eval",
+      href: `/workspace/${workspaceId}/eval`,
+      icon: BarChart2,
       exact: false,
     },
   ];

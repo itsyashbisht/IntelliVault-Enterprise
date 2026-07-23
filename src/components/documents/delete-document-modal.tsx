@@ -2,6 +2,7 @@
 
 import { Loader2, TriangleAlert, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 interface DeleteDocumentModalProps {
   open: boolean;
@@ -79,11 +80,11 @@ export default function DeleteDocumentModal({
 
       onSuccess();
     } catch (err) {
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to delete the document. Please try again."
-      );
+      const msg = err instanceof Error
+        ? err.message
+        : "Failed to delete the document. Please try again.";
+      toast.error(msg);
+      setError(msg);
     } finally {
       setIsLoading(false);
     }

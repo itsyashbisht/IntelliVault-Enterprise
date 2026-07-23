@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { CheckCircle, Loader2, Mail, X } from "lucide-react";
+import { toast } from "sonner";
 
 interface InviteMemberModalProps {
   open: boolean;
@@ -77,6 +78,7 @@ export default function InviteMembersModal({
       }
 
       setState("success");
+      toast.success("Invite sent successfully!");
       onSuccess();
 
       // Auto-close after showing success
@@ -85,11 +87,11 @@ export default function InviteMembersModal({
       }, 1500);
     } catch (err) {
       setState("error");
-      setError(
-        err instanceof Error
-          ? err.message
-          : "Failed to send invite. Please try again.",
-      );
+      const msg = err instanceof Error
+        ? err.message
+        : "Failed to send invite. Please try again.";
+      toast.error(msg);
+      setError(msg);
     }
   };
 
