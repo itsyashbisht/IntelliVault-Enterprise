@@ -1,16 +1,26 @@
 "use client";
-import MembersTable, {
-  workspaceMember,
-} from "@/components/members/members-table";
+import InviteMembersModal from "@/components/members/invite-members-modal";
+import MembersTable from "@/components/members/members-table";
 import { Button } from "@/components/ui/button";
 import { LucideUsers } from "lucide-react";
-import InviteMembersModal from "@/components/members/invite-members-modal";
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+
+export type MembersWithUsers = {
+  user: {
+    fullName: string | null;
+    email: string | undefined;
+  };
+  id: string;
+  joinedAt: Date;
+  role: "editor" | "owner" | "viewer";
+  userId: string;
+  workspaceId: string;
+};
 
 interface MembersClientProps {
   workspaceId: string;
-  members: workspaceMember[];
+  members: MembersWithUsers[];
 }
 
 export default function MembersClient(props: MembersClientProps) {

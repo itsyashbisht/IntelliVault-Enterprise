@@ -136,7 +136,6 @@ export async function POST(
         workspaceId,
         email,
         token,
-        role: "viewer",
         invitedBy: userId,
         status: "pending",
         expiresAt,

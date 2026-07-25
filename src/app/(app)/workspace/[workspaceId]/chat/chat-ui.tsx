@@ -84,8 +84,8 @@ export function ChatUI({
   const handleSubmit = async (message: PromptInputMessage) => {
     if (!message.text?.trim()) return;
     let activeSessionId = currentSessionId;
-    
-    setInput("")
+
+    setInput("");
     setSessionError(null);
     try {
       if (!activeSessionId) {
@@ -133,7 +133,8 @@ export function ChatUI({
         );
       }
     } catch (error) {
-      const msg = error instanceof Error ? error.message : "Something went wrong";
+      const msg =
+        error instanceof Error ? error.message : "Something went wrong";
       toast.error(msg);
       setSessionError(msg);
     } finally {
@@ -329,8 +330,9 @@ export function ChatUI({
                         }
 
                         // Handle Array response
-                        if (Array.isArray(output) || part?.output.length === 0)
+                        if (!Array.isArray(output) || output?.length === 0) {
                           return null;
+                        }
 
                         const results = part.output as Array<{
                           content: string;

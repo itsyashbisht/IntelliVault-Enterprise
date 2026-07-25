@@ -1,23 +1,25 @@
-<div align="center">
+
 
 # IntelliVault
 
 **Enterprise document intelligence — workspace-scoped hybrid RAG, streaming AI chat, and team collaboration.**
 
-[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?logo=typescript)](https://typescriptlang.org)
-[![Vercel AI SDK](https://img.shields.io/badge/Vercel%20AI%20SDK-v6-black?logo=vercel)](https://sdk.vercel.ai)
-[![Neon](https://img.shields.io/badge/Neon-pgvector-green?logo=postgresql)](https://neon.tech)
-[![Clerk](https://img.shields.io/badge/Auth-Clerk-purple?logo=clerk)](https://clerk.com)
-[![OpenAI](https://img.shields.io/badge/LLM-GPT--4o--mini-412991?logo=openai)](https://openai.com)
+[Next.js](https://nextjs.org)
+[TypeScript](https://typescriptlang.org)
+[Vercel AI SDK](https://sdk.vercel.ai)
+[Neon](https://neon.tech)
+[Clerk](https://clerk.com)
+[OpenAI](https://openai.com)
 
 Upload documents into isolated team workspaces. Ask questions. Get answers grounded in your organization's actual knowledge — with role-based access, source citations, session history, and full auditability.
 
 [Why IntelliVault](#why-intellivault) · [How It Works](#how-it-works) · [RAG Pipeline](#the-rag-pipeline) · [User Flow](#user-flow) · [Tech Stack](#tech-stack) · [Getting Started](#getting-started)
 
-</div>
+
 
 ---
+
+
 
 ## Why IntelliVault
 
@@ -31,26 +33,32 @@ Most "chat with your PDF" demos are single-user, single-document, zero access co
 
 ---
 
+
+
 ## Features
 
-| Feature | Description |
-|---|---|
-| **Workspace isolation** | Documents, chats, and members scoped per workspace — no cross-tenant leakage |
-| **RBAC** | Owner / Editor / Viewer roles enforced on every API route |
-| **Multi-format ingestion** | PDF, DOCX, TXT, and Markdown — parsed, chunked, embedded, and indexed automatically |
-| **Contextual chunking** | Each chunk is prefixed with document name + detected section heading before embedding — better vector placement without polluting display text |
-| **Hybrid RAG search** | pgvector semantic search + Postgres BM25 full-text search, merged with Reciprocal Rank Fusion |
-| **Query rewriting** | Follow-up questions ("what about section 3?") are rewritten into standalone queries using conversation history — fixes pronoun/reference retrieval failures |
-| **Tool-calling agent** | The LLM autonomously decides when to search the knowledge base |
-| **Source citations** | Every answer shows which documents and chunks backed it |
-| **LLM-as-judge evaluation** | Every response is scored on context relevance, faithfulness, and answer relevance — results surfaced in a per-workspace eval dashboard |
-| **Session persistence** | Conversations saved to DB, titled by LLM, resumable from history |
-| **Email invites** | Invite collaborators by email — works with or without an existing account |
-| **Streaming responses** | Token-by-token streaming via Vercel AI SDK |
-| **Toast notifications** | Sonner-powered toast feedback on every user action — uploads, deletions, invites, settings changes |
-| **Audit logging** | Every workspace action logged with actor, timestamp, and metadata |
+
+| Feature                     | Description                                                                                                                                                 |
+| --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Workspace isolation**     | Documents, chats, and members scoped per workspace — no cross-tenant leakage                                                                                |
+| **RBAC**                    | Owner / Editor / Viewer roles enforced on every API route                                                                                                   |
+| **Multi-format ingestion**  | PDF, DOCX, TXT, and Markdown — parsed, chunked, embedded, and indexed automatically                                                                         |
+| **Contextual chunking**     | Each chunk is prefixed with document name + detected section heading before embedding — better vector placement without polluting display text              |
+| **Hybrid RAG search**       | pgvector semantic search + Postgres BM25 full-text search, merged with Reciprocal Rank Fusion                                                               |
+| **Query rewriting**         | Follow-up questions ("what about section 3?") are rewritten into standalone queries using conversation history — fixes pronoun/reference retrieval failures |
+| **Tool-calling agent**      | The LLM autonomously decides when to search the knowledge base                                                                                              |
+| **Source citations**        | Every answer shows which documents and chunks backed it                                                                                                     |
+| **LLM-as-judge evaluation** | Every response is scored on context relevance, faithfulness, and answer relevance — results surfaced in a per-workspace eval dashboard                      |
+| **Session persistence**     | Conversations saved to DB, titled by LLM, resumable from history                                                                                            |
+| **Email invites**           | Invite collaborators by email — works with or without an existing account                                                                                   |
+| **Streaming responses**     | Token-by-token streaming via Vercel AI SDK                                                                                                                  |
+| **Toast notifications**     | Sonner-powered toast feedback on every user action — uploads, deletions, invites, settings changes                                                          |
+| **Audit logging**           | Every workspace action logged with actor, timestamp, and metadata                                                                                           |
+
 
 ---
+
+
 
 ## How It Works
 
@@ -61,7 +69,7 @@ IntelliVault has two halves: an **ingestion pipeline** that turns raw PDFs into 
 flowchart LR
     subgraph W ["  ingestion · write path  "]
         direction LR
-        A(["PDF upload"]) --> B["extract &amp; chunk"] --> C["embed + index"]
+        A(["PDF upload"]) --> B["extract & chunk"] --> C["embed + index"]
     end
 
     C --> D[("knowledge base<br/><i>pgvector · tsvector</i>")]
@@ -81,9 +89,15 @@ flowchart LR
     class H exit
 ```
 
+
+
 ---
 
+
+
 ## The RAG Pipeline
+
+
 
 ### 1 · Ingestion — documents in
 
@@ -109,15 +123,21 @@ flowchart TD
     class G exit
 ```
 
+
+
+
+
 ### 2 · Retrieval — answers out
 
 When a user asks a question, the query is **rewritten** for standalone clarity, then **two retrievers run in parallel** and their results are fused. Each is good at what the other is bad at:
 
-| Retriever | Finds | Example |
-|---|---|---|
-| **Vector search** | Meaning & paraphrases | "car" ≈ "automobile", "leave policy" ≈ "vacation rules" |
-| **BM25 full-text** | Exact tokens | policy codes (`POL-SEC-014`), names, IDs, clause numbers |
-| **RRF fusion** | Best of both | chunks that *both* retrievers rank highly float to the top |
+
+| Retriever          | Finds                 | Example                                                    |
+| ------------------ | --------------------- | ---------------------------------------------------------- |
+| **Vector search**  | Meaning & paraphrases | "car" ≈ "automobile", "leave policy" ≈ "vacation rules"    |
+| **BM25 full-text** | Exact tokens          | policy codes (`POL-SEC-014`), names, IDs, clause numbers   |
+| **RRF fusion**     | Best of both          | chunks that *both* retrievers rank highly float to the top |
+
 
 ```mermaid
 %%{init: {"theme":"base","themeVariables":{"fontFamily":"Inter, Segoe UI, sans-serif","fontSize":"13px","primaryColor":"#101113","primaryTextColor":"#e6e8ea","primaryBorderColor":"#2b2e34","lineColor":"#5a5f68","edgeLabelBackground":"#0b0c0e"},"flowchart":{"curve":"basis","nodeSpacing":42,"rankSpacing":50}}}%%
@@ -152,9 +172,13 @@ flowchart TD
     class I store
 ```
 
+
+
 > **Why hybrid?** Pure vector search misses rare terms, IDs, and exact names. Pure keyword search has no idea two words mean the same thing. Fusing both ranked lists with RRF means a chunk that both retrievers like is almost certainly the right one.
 
 ---
+
+
 
 ## User Flow
 
@@ -196,9 +220,13 @@ flowchart LR
     class I store
 ```
 
+
+
 Members and settings round out the workspace: invite collaborators by email with a role, rename the workspace, or delete it behind a type-to-confirm danger zone — every action written to the audit log.
 
 ---
+
+
 
 ## Data Model
 
@@ -230,32 +258,42 @@ erDiagram
     }
 ```
 
+
+
 All workspace-child tables **cascade-delete** when the parent workspace is removed.
 
 ---
 
+
+
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router) · TypeScript 5 |
-| Auth | Clerk |
-| Database | Neon serverless PostgreSQL |
-| Vector search | pgvector — cosine similarity + HNSW index |
+
+| Layer          | Technology                                         |
+| -------------- | -------------------------------------------------- |
+| Framework      | Next.js 16 (App Router) · TypeScript 5             |
+| Auth           | Clerk                                              |
+| Database       | Neon serverless PostgreSQL                         |
+| Vector search  | pgvector — cosine similarity + HNSW index          |
 | Keyword search | Postgres full-text search (`tsvector` / `ts_rank`) |
-| ORM | Drizzle ORM |
-| Embeddings | Google Gemini `gemini-embedding-001` (768 dims) |
-| LLM | OpenAI `gpt-4o-mini` via Vercel AI SDK v6 |
-| PDF parsing | unpdf |
-| DOCX parsing | mammoth |
-| Text splitting | LangChain `RecursiveCharacterTextSplitter` |
-| Notifications | Sonner (toast) |
-| Email | Resend + React Email |
-| Styling | Tailwind CSS v4 · Linear-inspired design system |
+| ORM            | Drizzle ORM                                        |
+| Embeddings     | Google Gemini `gemini-embedding-001` (768 dims)    |
+| LLM            | OpenAI `gpt-4o-mini` via Vercel AI SDK v6          |
+| PDF parsing    | unpdf                                              |
+| DOCX parsing   | mammoth                                            |
+| Text splitting | LangChain `RecursiveCharacterTextSplitter`         |
+| Notifications  | Sonner (toast)                                     |
+| Email          | Resend + React Email                               |
+| Styling        | Tailwind CSS v4 · Linear-inspired design system    |
+
 
 ---
 
+
+
 ## Getting Started
+
+
 
 ### Prerequisites
 
@@ -266,6 +304,8 @@ All workspace-child tables **cascade-delete** when the parent workspace is remov
 - [Google AI Studio](https://aistudio.google.com) API key (embeddings)
 - [Resend](https://resend.com) API key (invites)
 
+
+
 ### 1 · Clone & install
 
 ```bash
@@ -273,6 +313,8 @@ git clone https://github.com/itsyashbisht/IntelliVault-Enterprise.git
 cd IntelliVault-Enterprise
 npm install
 ```
+
+
 
 ### 2 · Environment variables
 
@@ -295,6 +337,8 @@ RESEND_API_KEY=re_...
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
+
+
 ### 3 · Database setup
 
 ```sql
@@ -311,6 +355,8 @@ CREATE TYPE message_role AS ENUM ('user', 'assistant');
 npx drizzle-kit push
 ```
 
+
+
 ### 4 · Run
 
 ```bash
@@ -321,22 +367,28 @@ Open [http://localhost:3000](http://localhost:3000) — sign up, create a worksp
 
 ---
 
+
+
 ## API Routes
 
-| Route | Methods | Access |
-|---|---|---|
-| `/api/workspaces` | `POST` `GET` | Authenticated |
-| `/api/workspaces/[id]` | `GET` `PATCH` `DELETE` | Member / Owner |
-| `/api/workspaces/[id]/members` | `GET` `PATCH` `DELETE` | Member / Owner |
-| `/api/workspaces/[id]/invites` | `POST` `GET` `DELETE` | Owner / Editor |
-| `/api/workspaces/[id]/documents` | `POST` `GET` | Member |
-| `/api/workspaces/[id]/documents/[docId]` | `DELETE` | Owner / Editor |
-| `/api/workspaces/[id]/chat` | `POST` | Member |
-| `/api/workspaces/[id]/chat/sessions` | `POST` `GET` | Member |
-| `/api/workspaces/[id]/eval` | `GET` | Owner / Editor |
-| `/api/invites/[token]` | `POST` | Authenticated |
+
+| Route                                    | Methods                | Access         |
+| ---------------------------------------- | ---------------------- | -------------- |
+| `/api/workspaces`                        | `POST` `GET`           | Authenticated  |
+| `/api/workspaces/[id]`                   | `GET` `PATCH` `DELETE` | Member / Owner |
+| `/api/workspaces/[id]/members`           | `GET` `PATCH` `DELETE` | Member / Owner |
+| `/api/workspaces/[id]/invites`           | `POST` `GET` `DELETE`  | Owner / Editor |
+| `/api/workspaces/[id]/documents`         | `POST` `GET`           | Member         |
+| `/api/workspaces/[id]/documents/[docId]` | `DELETE`               | Owner / Editor |
+| `/api/workspaces/[id]/chat`              | `POST`                 | Member         |
+| `/api/workspaces/[id]/chat/sessions`     | `POST` `GET`           | Member         |
+| `/api/workspaces/[id]/eval`              | `GET`                  | Owner / Editor |
+| `/api/invites/[token]`                   | `POST`                 | Authenticated  |
+
 
 ---
+
+
 
 ## Project Structure
 
@@ -372,6 +424,8 @@ src/
 
 ---
 
+
+
 ## Roadmap
 
 - [x] **Hybrid search** — pgvector + BM25 full-text, fused with Reciprocal Rank Fusion
@@ -385,14 +439,15 @@ src/
 
 ---
 
+
+
 ## License
 
 Private project. All rights reserved.
 
 ---
 
-<div align="center">
+
 
 Built by [Yash Bisht](https://github.com/itsyashbisht) · Next.js · pgvector · GPT-4o-mini · Gemini · Vercel AI SDK
 
-</div>

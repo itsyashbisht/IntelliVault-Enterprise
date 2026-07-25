@@ -1,9 +1,9 @@
+import { MembersWithUsers } from "@/app/(app)/workspace/[workspaceId]/members/members-client";
 import { formatDistanceToNow } from "date-fns";
 import { Trash2 } from "lucide-react";
-import { workspaceMember } from "@/components/members/members-table";
 
 interface MemberRowProps {
-  member: workspaceMember;
+  member: MembersWithUsers;
 }
 
 export default function MembersRow({ member }: MemberRowProps) {

@@ -1,15 +1,16 @@
 import WorkspaceCard from "@/components/dashboard/workspace-card";
 import { Button } from "@/components/ui/button";
 import { FolderOpen, Plus } from "lucide-react";
+import { Role } from "@/schema/enums";
 
 export type WorkspaceData = {
   id: string;
   name: string;
   slug: string;
-  role: string;
+  role: Role;
   createdAt: Date;
-  docCount: Number;
-  memberCount: Number;
+  docCount: number;
+  memberCount: number;
 };
 
 interface DashboardProps {

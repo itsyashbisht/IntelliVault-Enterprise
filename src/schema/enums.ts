@@ -1,4 +1,5 @@
 import { pgEnum } from "drizzle-orm/pg-core";
+import { workspaceMembers } from "./workspaceMember";
 
 export const workspaceRoleEnum = pgEnum("workspace_role", [
   "owner",
@@ -19,3 +20,4 @@ export const documentStatusEnum = pgEnum("document_status", [
 ]);
 
 export const messageRoleEnum = pgEnum("message_role", ["user", "assistant"]);
+export type Role = (typeof workspaceMembers.$inferSelect)["role"];

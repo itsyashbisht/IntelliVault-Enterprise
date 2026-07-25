@@ -22,7 +22,6 @@ export default function CitationChip({ source }: { source: string }) {
       "
     >
       <FileText size={11} className="shrink-0" />
-
       <span className="truncate">{display}</span>
     </div>
   );

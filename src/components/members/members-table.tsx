@@ -1,20 +1,10 @@
 import { FileX } from "lucide-react";
 import MembersRow from "@/components/members/members-row";
+import { MembersWithUsers } from "@/app/(app)/workspace/[workspaceId]/members/members-client";
 
-export type workspaceMember = {
-  id: string;
-  workspaceId: string;
-  role: string;
-  userId: string;
-  joinedAt: Date;
-  user: {
-    fullName: string | null;
-    email: string | null;
-  };
-};
 
 interface MembersTableProps {
-  members: workspaceMember[];
+  members: MembersWithUsers[];
 }
 
 export default function MembersTable({ members }: MembersTableProps) {

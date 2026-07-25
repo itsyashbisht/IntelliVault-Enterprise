@@ -3,9 +3,13 @@ import { db } from "@/lib/db-config";
 import { documents, workspaceMembers, workspaces } from "@/schema";
 import { auth } from "@clerk/nextjs/server";
 import { count, eq, inArray } from "drizzle-orm";
+import { redirect } from "next/navigation";
 
 export default async function WorkspacesDashboard() {
   const { userId } = await auth();
+  if (!userId) {
+    redirect("/sign-in");
+  }
 
   const memberships = await db
     .select({
@@ -17,7 +21,7 @@ export default async function WorkspacesDashboard() {
     })
     .from(workspaceMembers)
     .innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id))
-    .where(eq(workspaceMembers.userId, userId));
+    .where(eq(workspaceMembers.id, userId!));
 
   const workspaceIds = memberships.map((m) => m.workspaceId);
 
@@ -55,8 +59,8 @@ export default async function WorkspacesDashboard() {
     slug: m.workspaceSlug,
     role: m.role,
     createdAt: m.workspaceCreatedAt,
-    docCount: docCountMap[m.workspaceId] ?? 0,
     memberCount: memberCountMap[m.workspaceId] ?? 0,
+    docCount: docCountMap[m.workspaceId] ?? 0,
   }));
 
   return <DashboardClient workspaces={workspaceData} />;

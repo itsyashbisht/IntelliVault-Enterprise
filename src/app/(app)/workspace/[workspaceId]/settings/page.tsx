@@ -18,7 +18,7 @@ export default async function SettingsPage({
       where: eq(workspaces.id, workspaceId),
     }),
     await db.query.workspaceMembers.findFirst({
-      where: eq(workspaceMembers.userId, userId),
+      where: eq(workspaceMembers.id, userId!),
     }),
   ]);
 
