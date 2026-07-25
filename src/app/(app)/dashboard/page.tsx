@@ -21,7 +21,7 @@ export default async function WorkspacesDashboard() {
     })
     .from(workspaceMembers)
     .innerJoin(workspaces, eq(workspaceMembers.workspaceId, workspaces.id))
-    .where(eq(workspaceMembers.id, userId!));
+    .where(eq(workspaceMembers.userId, userId));
 
   const workspaceIds = memberships.map((m) => m.workspaceId);
 
