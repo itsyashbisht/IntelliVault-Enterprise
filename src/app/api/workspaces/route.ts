@@ -9,7 +9,7 @@ const createWorkspaceSchema = z.object({
   name: z
     .string()
     .min(3, "Name is required")
-    .max(50, "Name muse be under 50 characters")
+    .max(50, "Name must be under 50 characters")
     .trim(),
 });
 
@@ -29,9 +29,7 @@ export function generateUniqueSlug(base: string): string {
 }
 
 export async function POST(req: Request) {
-  console.log("Route reached!")
   try {
-
     const { userId } = await auth();
     if (!userId) {
       return NextResponse.json(

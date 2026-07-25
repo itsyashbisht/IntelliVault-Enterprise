@@ -1,7 +1,11 @@
+"use client";
+import CreateWorkspaceModal from "@/components/dashboard/create-workspace-modal";
 import WorkspaceCard from "@/components/dashboard/workspace-card";
 import { Button } from "@/components/ui/button";
-import { FolderOpen, Plus } from "lucide-react";
 import { Role } from "@/schema/enums";
+import { FolderOpen, Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 export type WorkspaceData = {
   id: string;
@@ -18,6 +22,10 @@ interface DashboardProps {
 }
 
 export default function DashboardClient({ workspaces }: DashboardProps) {
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const router = useRouter();
+  const [workspaceName, setWorkspaceName] = useState<string>("");
+
   return (
     <main className="pt-14 max-w-[1280px] mx-auto px-6 py-12">
       <div className="flex items-center justify-between mb-8">
@@ -53,7 +61,10 @@ export default function DashboardClient({ workspaces }: DashboardProps) {
           ))}
 
           {/* Create new card */}
-          <button className="border border-dashed border-[#23252a] rounded-[12px] p-5 flex flex-col items-center justify-center text-center hover:border-[#34343a] hover:bg-[#0f1011] transition-all gap-2 min-h-[180px] group">
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="border border-dashed border-[#23252a] rounded-[12px] p-5 flex flex-col items-center justify-center text-center hover:border-[#34343a] hover:bg-[#0f1011] transition-all gap-2 min-h-[180px] group"
+          >
             <div className="w-8 h-8 rounded-full bg-[#18191a] flex items-center justify-center group-hover:bg-[#23252a] transition-colors">
               <Plus
                 size={14}
@@ -64,6 +75,14 @@ export default function DashboardClient({ workspaces }: DashboardProps) {
               New workspace
             </span>
           </button>
+          <CreateWorkspaceModal
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSuccess={() => {
+              setIsModalOpen(false);
+              router.refresh();
+            }}
+          />
         </div>
       )}
     </main>
