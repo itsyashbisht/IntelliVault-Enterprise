@@ -53,6 +53,14 @@ export default function DashboardClient({ workspaces }: DashboardProps) {
           <Button onClick={() => setIsModalOpen(true)} variant="default">
             <Plus size={13} /> Create workspace
           </Button>
+          <CreateWorkspaceModal
+            open={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onSuccess={() => {
+              setIsModalOpen(false);
+              router.refresh();
+            }}
+          />
         </div>
       ) : (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
