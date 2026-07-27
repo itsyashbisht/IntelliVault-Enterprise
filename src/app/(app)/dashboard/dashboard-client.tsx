@@ -50,7 +50,7 @@ export default function DashboardClient({ workspaces }: DashboardProps) {
           <p className="text-[13px] text-[#8a8f98] mb-6">
             Create your first workspace to start uploading documents.
           </p>
-          <Button variant="default">
+          <Button onClick={() => setIsModalOpen(true)} variant="default">
             <Plus size={13} /> Create workspace
           </Button>
         </div>
@@ -88,4 +88,3 @@ export default function DashboardClient({ workspaces }: DashboardProps) {
     </main>
   );
 }
-
