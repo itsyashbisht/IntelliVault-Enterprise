@@ -133,13 +133,13 @@ export default async function EvalPage({
   const worst = worstSessions.map(normalizeSession);
 
   return (
-    <div className="flex flex-col px-8 py-8 gap-8 max-w-full w-full">
+    <div className="flex w-full max-w-full flex-col gap-8 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       {/* Page header */}
       <header className="flex flex-col gap-1">
-        <h1 className="text-[28px] font-semibold tracking-[-0.021em] text-[var(--color-ink)]">
+        <h1 className="text-[24px] font-semibold tracking-[-0.021em] text-[var(--color-ink)] sm:text-[28px]">
           Evaluation
         </h1>
-        <p className="text-[15px] text-[var(--color-ink-subtle)] mt-1">
+        <p className="mt-1 text-[15px] text-[var(--color-ink-subtle)]">
           RAG quality scores for every assistant response in this workspace.
         </p>
       </header>
@@ -147,7 +147,7 @@ export default async function EvalPage({
       <main className="flex flex-col gap-8">
         <ScoreCard aggregate={aggregate} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-4 items-start">
+        <div className="grid grid-cols-1 items-start gap-4 xl:grid-cols-[2fr_1fr]">
           <SessionTable sessions={sessions} workspaceId={workspaceId} />
           <WorstSessions sessions={worst} workspaceId={workspaceId} />
         </div>
@@ -155,3 +155,4 @@ export default async function EvalPage({
     </div>
   );
 }
+

@@ -15,7 +15,7 @@ export default function DocumentList({
 }: DocumentListProps) {
   return (
     <div className="bg-[#0f1011] border border-[#23252a] rounded-[12px] overflow-hidden">
-      <div className="flex items-center justify-between px-5 py-4 border-b border-[#23252a]">
+      <div className="flex items-center justify-between gap-3 px-4 py-4 border-b border-[#23252a] sm:px-5">
         <span className="text-[13px] font-semibold text-[#f7f8f8] tracking-[-0.2px]">
           Recent documents
         </span>
@@ -32,7 +32,7 @@ export default function DocumentList({
           return (
             <div
               key={doc.id}
-              className="flex items-center gap-3 px-5 py-3 hover:bg-[#141516] transition-colors"
+              className="flex items-start gap-3 px-4 py-3 hover:bg-[#141516] transition-colors sm:px-5 sm:items-center"
             >
               <div className="w-7 h-7 rounded-[6px] bg-[#18191a] flex items-center justify-center flex-shrink-0">
                 <span className="text-[9px] font-bold text-[#62666d]">
@@ -61,3 +61,4 @@ export default function DocumentList({
     </div>
   );
 }
+

@@ -64,19 +64,19 @@ export default async function HomePage({
   });
 
   return (
-    <div className="flex flex-col px-8 py-8 gap-8 max-w-full w-full">
+    <div className="flex w-full max-w-full flex-col gap-8 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       {/* Page header */}
       <header className="flex flex-col gap-1">
-        <h1 className="text-[28px] font-semibold tracking-[-0.021em] text-[var(--color-ink)]">
+        <h1 className="text-[24px] font-semibold tracking-[-0.021em] text-[var(--color-ink)] sm:text-[28px]">
           IntelliVault Intelligence
         </h1>
-        <p className="text-[15px] text-[var(--color-ink-subtle)] mt-1">
+        <p className="mt-1 text-[15px] text-[var(--color-ink-subtle)]">
           Overview of your workspace activity and recent documents.{" "}
         </p>
       </header>
 
       <main>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-8">
+        <div className="mb-8 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {stats.map((stat) => {
             return (
               <StatsCard
@@ -89,7 +89,7 @@ export default async function HomePage({
           })}
         </div>
 
-        <div className="grid grid-cols-2 gap-4 mb-8">
+        <div className="mb-8 grid grid-cols-1 gap-4 xl:grid-cols-2">
           <DocumentList documents={recentDocuments} workspaceId={workspaceId} />
           <RecentChatsList
             chats={recentChatSessions}
@@ -101,3 +101,4 @@ export default async function HomePage({
     </div>
   );
 }
+

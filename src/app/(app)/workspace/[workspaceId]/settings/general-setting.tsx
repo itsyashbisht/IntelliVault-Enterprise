@@ -53,35 +53,30 @@ export default function GeneralSettings({ workspace }: GeneralSettingsProps) {
       setTimeout(() => setSaveState("idle"), 2000);
     } catch (err) {
       setSaveState("idle");
-      const msg = err instanceof Error
-        ? err.message
-        : "Failed to update workspace name. Please try again.";
+      const msg =
+        err instanceof Error
+          ? err.message
+          : "Failed to update workspace name. Please try again.";
       toast.error(msg);
       setError(msg);
     }
   };
 
   return (
-    <div
-      className="
-      bg-[var(--color-surface-1)]
-      border border-[var(--color-hairline)]
-      rounded-[12px] overflow-hidden
-    "
-    >
+    <div className="overflow-hidden rounded-[12px] border border-[var(--color-hairline)] bg-[var(--color-surface-1)]">
       {/* Section header */}
-      <div className="px-6 py-5 border-b border-[var(--color-hairline)]">
-        <h2 className="text-[14px] font-semibold text-[var(--color-ink)] tracking-[-0.2px]">
+      <div className="border-b border-[var(--color-hairline)] px-4 py-5 sm:px-6">
+        <h2 className="text-[14px] font-semibold tracking-[-0.2px] text-[var(--color-ink)]">
           General
         </h2>
-        <p className="text-[13px] text-[var(--color-ink-subtle)] mt-0.5">
+        <p className="mt-0.5 text-[13px] text-[var(--color-ink-subtle)]">
           Update your workspace name and settings.
         </p>
       </div>
 
       {/* Form */}
-      <div className="px-6 py-6 flex flex-col gap-5">
-        <div className="flex flex-col gap-2 max-w-sm">
+      <div className="flex flex-col gap-5 px-4 py-5 sm:px-6 sm:py-6">
+        <div className="flex max-w-sm flex-col gap-2">
           <label
             htmlFor="workspace-name"
             className="text-[13px] font-medium text-[var(--color-ink-muted)]"
@@ -100,17 +95,7 @@ export default function GeneralSettings({ workspace }: GeneralSettingsProps) {
             }}
             disabled={saveState === "loading"}
             placeholder="e.g. Acme Research"
-            className="
-              w-full px-3 py-2.5 rounded-[8px]
-              bg-[var(--color-surface-2)]
-              border border-[var(--color-hairline)]
-              text-[14px] text-[var(--color-ink)]
-              placeholder:text-[var(--color-ink-tertiary)]
-              focus:border-[var(--color-primary)]
-              focus:ring-2 focus:ring-[var(--color-primary)]/20
-              disabled:opacity-50 disabled:cursor-not-allowed
-              outline-none transition-all duration-150
-            "
+            className="w-full rounded-[8px] border border-[var(--color-hairline)] bg-[var(--color-surface-2)] px-3 py-2.5 text-[14px] text-[var(--color-ink)] outline-none transition-all duration-150 placeholder:text-[var(--color-ink-tertiary)] focus:border-[var(--color-primary)] focus:ring-2 focus:ring-[var(--color-primary)]/20 disabled:cursor-not-allowed disabled:opacity-50"
           />
 
           {error && (
@@ -119,12 +104,7 @@ export default function GeneralSettings({ workspace }: GeneralSettingsProps) {
         </div>
 
         {/* Footer */}
-        <div
-          className="
-          flex items-center justify-between
-          pt-4 border-t border-[var(--color-hairline)]
-        "
-        >
+        <div className="flex flex-col gap-3 border-t border-[var(--color-hairline)] pt-4 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-[12px] text-[var(--color-ink-tertiary)]">
             This updates the workspace name for all members.
           </p>
@@ -133,28 +113,11 @@ export default function GeneralSettings({ workspace }: GeneralSettingsProps) {
             type="button"
             onClick={handleSave}
             disabled={isDisabled}
-            className="
-              inline-flex items-center gap-2
-              px-4 py-2 rounded-[8px]
-              text-[13px] font-medium
-              transition-colors duration-100
-              min-w-[110px] justify-center
-              disabled:opacity-40 disabled:cursor-not-allowed
-              ${saveState === 'success'
-                ? 'bg-[var(--color-success)]/10 text-[var(--color-success)] border border-[var(--color-success)]/20'
-                : 'bg-[var(--color-primary)] hover:bg-[var(--color-primary-hover)] text-white'
-              }
-            "
-            style={{
-              backgroundColor:
-                saveState === "success" ? "rgba(39,166,68,0.10)" : undefined,
-              color:
-                saveState === "success" ? "var(--color-success)" : undefined,
-              border:
-                saveState === "success"
-                  ? "1px solid rgba(39,166,68,0.20)"
-                  : undefined,
-            }}
+            className={
+              saveState === "success"
+                ? "inline-flex w-full min-w-[110px] items-center justify-center gap-2 rounded-[8px] border border-[var(--color-success)]/20 bg-[var(--color-success)]/10 px-4 py-2 text-[13px] font-medium text-[var(--color-success)] transition-colors duration-100 disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+                : "inline-flex w-full min-w-[110px] items-center justify-center gap-2 rounded-[8px] bg-[var(--color-primary)] px-4 py-2 text-[13px] font-medium text-white transition-colors duration-100 hover:bg-[var(--color-primary-hover)] disabled:cursor-not-allowed disabled:opacity-40 sm:w-auto"
+            }
           >
             {saveState === "loading" ? (
               <>

@@ -30,9 +30,9 @@ export default function MembersClient(props: MembersClientProps) {
 
   return (
     <>
-      <header className="flex gap-1 justify-between items-center">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-[28px] font-semibold tracking-[-0.021em] text-[var(--color-ink)]">
+          <h1 className="text-[24px] font-semibold tracking-[-0.021em] text-[var(--color-ink)] sm:text-[28px]">
             Members
           </h1>
           <p className="text-[15px] text-[var(--color-ink-subtle)] mt-1">
@@ -40,8 +40,8 @@ export default function MembersClient(props: MembersClientProps) {
           </p>
         </div>
 
-        <div>
-          <Button onClick={() => setOpen(true)}>
+        <div className="flex-shrink-0">
+          <Button className="w-full sm:w-auto" onClick={() => setOpen(true)}>
             <LucideUsers />
             Invite members
           </Button>
@@ -61,3 +61,5 @@ export default function MembersClient(props: MembersClientProps) {
     </>
   );
 }
+
+

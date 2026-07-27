@@ -25,7 +25,7 @@ export default function RecentChatsList({
 }: RecentChatsListProps) {
   return (
     <div className="bg-[#0f1011] border border-[#23252a] rounded-[12px] overflow-hidden">
-      <header className="flex items-center justify-between px-5 py-4 border-b border-[#23252a]">
+      <header className="flex items-center justify-between gap-3 px-4 py-4 border-b border-[#23252a] sm:px-5">
         <span className="text-[13px] font-semibold text-[#f7f8f8] tracking-[-0.2px]">
           Recent chats
         </span>
@@ -59,7 +59,7 @@ export default function RecentChatsList({
               <Link
                 href={`/workspace/${workspaceId}/chat/${chat.id}`}
                 key={chat.id}
-                className="w-full flex items-start gap-3 px-5 py-3 hover:bg-[#141516] transition-colors text-left"
+                className="w-full flex items-start gap-3 px-4 py-3 hover:bg-[#141516] transition-colors text-left sm:px-5"
               >
                 <div className="w-7 h-7 rounded-full bg-[#5e6ad2]/10 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <MessageSquare size={11} className="text-[#5e6ad2]" />
@@ -85,3 +85,4 @@ export default function RecentChatsList({
     </div>
   );
 }
+

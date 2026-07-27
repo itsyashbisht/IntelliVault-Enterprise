@@ -12,9 +12,9 @@ export default function WorkspaceCard({ workspace }: Props) {
     <Link
       href={`/workspace/${workspace.id}`}
       key={workspace.id}
-      className="bg-[#0f1011] border border-[#23252a] rounded-[12px] p-5 text-left hover:bg-[#141516] hover:border-[#34343a] transition-all group"
+      className="group rounded-[12px] border border-[#23252a] bg-[#0f1011] p-4 text-left transition-all hover:border-[#34343a] hover:bg-[#141516] sm:p-5"
     >
-      <div className="flex items-start justify-between mb-4">
+      <div className="mb-4 flex items-start justify-between gap-3">
         <div className="w-9 h-9 rounded-[8px] bg-[#5e6ad2]/15 flex items-center justify-center">
           <span className="text-[14px] font-bold text-[#5e6ad2]">
             {workspace.name[0]}
@@ -45,3 +45,4 @@ export default function WorkspaceCard({ workspace }: Props) {
     </Link>
   );
 }
+

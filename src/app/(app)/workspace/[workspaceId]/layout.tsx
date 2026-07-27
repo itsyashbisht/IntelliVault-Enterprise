@@ -32,11 +32,12 @@ export default async function WorkspaceLayout({
   if (!workspace) redirect("/dashboard");
 
   return (
-    <div className="flex min-h-dvh bg-[var(--color-canvas)]">
+    <div className="flex min-h-dvh flex-col bg-[var(--color-canvas)] md:flex-row">
       <Sidebar workspaceId={workspaceId} workspaceName={workspace.name} />
-      <main className="flex-1 min-w-0 overflow-y-auto bg-[var(--color-canvas)] ">
+      <main className="min-w-0 flex-1 overflow-y-auto bg-[var(--color-canvas)]">
         {children}
       </main>
     </div>
   );
 }
+

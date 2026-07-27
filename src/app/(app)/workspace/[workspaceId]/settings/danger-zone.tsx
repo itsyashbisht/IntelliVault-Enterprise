@@ -19,7 +19,7 @@ export default function DangerZone({ workspace, role }: DangerZoneProps) {
   return (
     <div className="my-4">
       {role === "owner" && (
-        <div className="bg-[#0f1011] border border-[#ef444430] rounded-[12px] p-6">
+        <div className="bg-[#0f1011] border border-[#ef444430] rounded-[12px] p-5 sm:p-6">
           <h2 className="text-[14px] font-semibold text-[#ef4444] mb-1 tracking-[-0.2px]">
             Danger zone
           </h2>
@@ -27,7 +27,7 @@ export default function DangerZone({ workspace, role }: DangerZoneProps) {
             Permanently delete this workspace and all its data. This action
             cannot be undone.
           </p>
-          <Btn variant="destructive" onClick={() => setIsDeleteModalOpen(true)}>
+          <Btn className="w-full sm:w-auto" variant="destructive" onClick={() => setIsDeleteModalOpen(true)}>
             <Trash2 size={13} /> Delete workspace
           </Btn>
         </div>
@@ -45,3 +45,4 @@ export default function DangerZone({ workspace, role }: DangerZoneProps) {
     </div>
   );
 }
+
