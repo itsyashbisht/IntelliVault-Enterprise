@@ -147,7 +147,7 @@ export function ChatUI({
 
   return (
     <main className="flex min-h-0 flex-1 flex-col bg-[var(--color-canvas)]">
-      <header className="flex h-14 shrink-0 items-center border-b border-[var(--color-hairline)] px-5 lg:px-7">
+      <header className="flex h-14 shrink-0 items-center border-b border-[var(--color-hairline)] px-5 pl-14 md:pl-5 lg:px-7">
         <div className="min-w-0">
           <h1 className="truncate text-[14px] font-medium tracking-[-0.1px] text-[var(--color-ink)]">
             IntelliVault Chat
@@ -475,3 +475,4 @@ export function ChatUI({
     </main>
   );
 }
+
