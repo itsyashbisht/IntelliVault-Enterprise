@@ -14,7 +14,7 @@ export default async function AppLayout({
   return (
     <div className="min-h-dvh bg-[var(--color-canvas)]">
       <DashboardNav />
-      <div className="mt-10">{children}</div>
+      <div className="pt-14">{children}</div>
     </div>
   );
 }

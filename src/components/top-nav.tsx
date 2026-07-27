@@ -18,7 +18,7 @@ export default function TopNav() {
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 h-14 flex items-center px-6 transition-all duration-200"
+      className="fixed top-0 left-0 right-0 z-50 flex h-14 items-center px-4 transition-all duration-200 sm:px-6"
       style={{
         background: scrolled ? "rgba(1,1,2,0.92)" : "transparent",
         backdropFilter: scrolled ? "blur(12px)" : "none",
@@ -41,7 +41,7 @@ export default function TopNav() {
         ))}{" "}
       </nav>
 
-      <div className="flex items-center gap-2 ml-auto">
+      <div className="ml-auto flex items-center gap-2">
         {isLoaded &&
           (!isSignedIn ? (
             <>

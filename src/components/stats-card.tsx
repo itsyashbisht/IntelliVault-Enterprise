@@ -14,7 +14,7 @@ export default function StatsCard({
   return (
     <div
       key={label}
-      className="bg-[#0f1011] border border-[#23252a] rounded-[10px] p-4"
+      className="bg-[#0f1011] border border-[#23252a] rounded-[10px] p-4 sm:p-4"
     >
       <div className="flex items-center justify-between mb-2">
         <span className="text-[11px] uppercase tracking-widest text-[#62666d] font-medium">
@@ -22,9 +22,10 @@ export default function StatsCard({
         </span>
         <Icon size={13} className="text-[#62666d]" />
       </div>
-      <span className="text-[28px] font-semibold text-[#f7f8f8] tracking-[-0.5px]">
+      <span className="text-[24px] font-semibold text-[#f7f8f8] tracking-[-0.5px] sm:text-[28px]">
         {value}
       </span>
     </div>
   );
 }
+

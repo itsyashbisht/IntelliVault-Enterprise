@@ -27,13 +27,13 @@ export default function DashboardClient({ workspaces }: DashboardProps) {
   const [workspaceName, setWorkspaceName] = useState<string>("");
 
   return (
-    <main className="pt-14 max-w-[1280px] mx-auto px-6 py-12">
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-[28px] font-semibold text-[#f7f8f8] tracking-[-0.6px]">
+    <main className="mx-auto max-w-[1280px] px-4 py-8 sm:px-6 sm:py-10 lg:px-6 lg:py-12">
+      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div className="min-w-0">
+          <h1 className="text-[24px] font-semibold tracking-[-0.6px] text-[#f7f8f8] sm:text-[28px]">
             Workspaces
           </h1>
-          <p className="text-[14px] text-[#8a8f98] mt-0.5">
+          <p className="mt-0.5 text-[14px] text-[#8a8f98]">
             Manage your document collections and teams.
           </p>
         </div>
@@ -55,7 +55,7 @@ export default function DashboardClient({ workspaces }: DashboardProps) {
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {workspaces.map((ws) => (
             <WorkspaceCard workspace={ws} key={ws.id} />
           ))}
@@ -88,3 +88,4 @@ export default function DashboardClient({ workspaces }: DashboardProps) {
     </main>
   );
 }
+

@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en" className={inter.className}>
-        <body className="bg-canvas text-ink antialiased">
+        <body className="bg-canvas text-ink antialiased overflow-x-hidden">
           <main>{children}</main>
           <Toaster
             position="top-right"
