@@ -3,6 +3,7 @@ import { chunks, documents } from "@/schema";
 import { and, cosineDistance, desc, eq, gt, sql } from "drizzle-orm";
 import { db } from "./db-config";
 import { rewriteQuery } from "./rewrite-query";
+import { rerankChunks } from "./rerank";
 
 /*
 -> Hybrid RAG: Retrieval Pipeline.
@@ -46,7 +47,7 @@ export async function searchDocuments(
   query: string,
   workspaceId: string,
   topK: number = 5,
-  threshold: number = 0.55
+  threshold: number = 0.6
 ): Promise<SearchResult[]> {
   // Rewrite the query.
   const rewrittenQuery = await rewriteQuery(query, history);
@@ -111,7 +112,12 @@ export async function searchDocuments(
   ]);
 
   // 5. Fuse the two ranked lists into one and return the top K.
-  return mergeRRF(vectorResults, bm25Results, topK);
+  const fused = mergeRRF(vectorResults, bm25Results, 20);
+
+  // Re-rank the 20 down to topK
+  const reranked = await rerankChunks(rewrittenQuery, fused, topK);
+
+  return reranked;
 }
 
 /**
