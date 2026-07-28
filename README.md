@@ -1,21 +1,15 @@
-<div align="center">
-
 # IntelliVault
 
-### Enterprise document intelligence — workspace-scoped hybrid RAG, streaming AI chat, and team collaboration.
+**Enterprise document intelligence — workspace-scoped hybrid RAG, streaming AI chat, and team collaboration.**
 
-<p>
-  <img src="https://img.shields.io/badge/Next.js-16-black?logo=next.js" />
-  <img src="https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript" />
-  <img src="https://img.shields.io/badge/Neon-PostgreSQL-00E699?logo=postgresql" />
-  <img src="https://img.shields.io/badge/Auth-Clerk-6C47FF" />
-  <img src="https://img.shields.io/badge/LLM-GPT--4o--mini-412991?logo=openai" />
-  <img src="https://img.shields.io/badge/Vercel_AI_SDK-v6-black?logo=vercel" />
-</p>
+[![Next.js](https://img.shields.io/badge/Next.js-16-black?logo=next.js)](https://nextjs.org)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)](https://typescriptlang.org)
+[![Neon](https://img.shields.io/badge/Neon-PostgreSQL-00E699?logo=postgresql)](https://neon.tech)
+[![Clerk](https://img.shields.io/badge/Auth-Clerk-6C47FF)](https://clerk.com)
+[![OpenAI](https://img.shields.io/badge/LLM-GPT--4o--mini-412991?logo=openai)](https://openai.com)
+[![Vercel AI SDK](https://img.shields.io/badge/Vercel_AI_SDK-v6-black?logo=vercel)](https://sdk.vercel.ai)
 
 Upload documents into isolated team workspaces. Ask questions. Get answers grounded in your organization's actual knowledge — with role-based access, source citations, session history, and full auditability.
-
-</div>
 
 ---
 
