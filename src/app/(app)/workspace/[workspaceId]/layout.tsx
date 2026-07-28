@@ -1,10 +1,11 @@
-import { auth } from "@clerk/nextjs/server";
-import { redirect } from "next/navigation";
-import { eq } from "drizzle-orm";
 import { db } from "@/lib/db-config";
 import { workspaces } from "@/schema";
-import Sidebar from "./sidebar";
+import { auth } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 import React from "react";
+import MobileTopSidebar from "../mobile-top-sidebar";
+import Sidebar from "./sidebar";
 
 export default async function WorkspaceLayout({
   children,
@@ -32,9 +33,13 @@ export default async function WorkspaceLayout({
   if (!workspace) redirect("/dashboard");
 
   return (
-    <div className="flex min-h-dvh flex-col bg-[var(--color-canvas)] md:flex-row">
+    <div className="flex h-dvh min-h-0 flex-col bg-[var(--color-canvas)] md:flex-row">
+      <MobileTopSidebar
+        workspaceId={workspaceId}
+        workspaceName={workspace.name}
+      />
       <Sidebar workspaceId={workspaceId} workspaceName={workspace.name} />
-      <main className="min-w-0 flex-1 overflow-y-auto bg-[var(--color-canvas)]">
+      <main className="min-h-0 min-w-0 flex-1 overflow-y-auto bg-[var(--color-canvas)]">
         {children}
       </main>
     </div>
