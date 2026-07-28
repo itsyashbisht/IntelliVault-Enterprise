@@ -23,7 +23,7 @@ export default function ChatWrapper({
   const [mobileHistoryOpen, setMobileHistoryOpen] = useState(false);
 
   return (
-    <div className="relative flex h-dvh min-h-0 w-full overflow-hidden bg-[var(--color-canvas)]">
+    <div className="relative flex h-full min-h-0 w-full overflow-hidden bg-[var(--color-canvas)]">
       <ChatHistorySidebar
         desktopExpanded={desktopHistoryExpanded}
         mobileOpen={mobileHistoryOpen}

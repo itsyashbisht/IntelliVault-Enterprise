@@ -17,16 +17,10 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import { Response } from "@/components/ai-elements/response";
 import CitationChip from "@/components/chat/citation-chip";
+import IntelliVaultLogo from "@/components/logo";
 import { useChat } from "@ai-sdk/react";
 import { DefaultChatTransport, UIMessage } from "ai";
-import {
-  Bot,
-  FileSearch,
-  Loader2,
-  MessageSquareText,
-  Search,
-  Sparkles,
-} from "lucide-react";
+import { Bot, Loader2 } from "lucide-react";
 import { Fragment, useState } from "react";
 import { toast } from "sonner";
 
@@ -37,24 +31,10 @@ interface ChatUIProps {
 }
 
 const suggestions = [
-  {
-    icon: FileSearch,
-    title: "Summarize documents",
-    description: "Get a concise overview of your workspace.",
-    prompt: "Summarize the key points from my documents",
-  },
-  {
-    icon: MessageSquareText,
-    title: "Explore main topics",
-    description: "Understand the subjects covered in your files.",
-    prompt: "What are the main topics in my documents?",
-  },
-  {
-    icon: Search,
-    title: "Find key details",
-    description: "Extract important facts, dates, and numbers.",
-    prompt: "Find important dates or numbers",
-  },
+  "What are the main topics across my documents?",
+  "Summarize the key points from my files",
+  "Find important dates, numbers, or deadlines",
+  "What policies or procedures should I know about?",
 ];
 
 export function ChatUI({
@@ -172,11 +152,7 @@ export function ChatUI({
               <div className="flex w-full flex-col justify-center">
                 <div className="mb-8">
                   <div className="mb-5 flex size-10 items-center justify-center rounded-lg border border-[var(--color-hairline)] bg-[var(--color-surface-1)]">
-                    <Sparkles
-                      size={17}
-                      strokeWidth={1.8}
-                      className="text-[var(--color-primary)]"
-                    />
+                    <IntelliVaultLogo size={18} />
                   </div>
 
                   <h2 className="text-[26px] font-semibold tracking-[-0.6px] text-[var(--color-ink)]">
@@ -189,55 +165,27 @@ export function ChatUI({
                   </p>
                 </div>
 
-                <div className="grid gap-2 md:grid-cols-3">
-                  {suggestions.map((suggestion) => {
-                    const Icon = suggestion.icon;
-
-                    return (
-                      <button
-                        key={suggestion.title}
-                        type="button"
-                        disabled={isLoading}
-                        onClick={() =>
-                          handleSubmit({
-                            text: suggestion.prompt,
-                          })
-                        }
-                        className="
-                          group flex min-h-[132px] cursor-pointer
-                          flex-col rounded-lg
-                          border border-[var(--color-hairline)]
-                          bg-[var(--color-surface-1)]
-                          p-4 text-left
-                          transition-colors duration-150
-                          hover:border-[var(--color-hairline-strong)]
-                          hover:bg-[var(--color-surface-2)]
-                          disabled:pointer-events-none
-                          disabled:opacity-50
-                        "
-                      >
-                        <Icon
-                          size={16}
-                          strokeWidth={1.7}
-                          className="
-                            text-[var(--color-ink-tertiary)]
-                            transition-colors
-                            group-hover:text-[var(--color-primary)]
-                          "
-                        />
-
-                        <div className="mt-auto pt-6">
-                          <p className="text-[13px] font-medium text-[var(--color-ink)]">
-                            {suggestion.title}
-                          </p>
-
-                          <p className="mt-1.5 text-[11px] leading-[17px] text-[var(--color-ink-tertiary)]">
-                            {suggestion.description}
-                          </p>
-                        </div>
-                      </button>
-                    );
-                  })}
+                <div className="flex flex-col gap-2">
+                  {suggestions.map((prompt) => (
+                    <button
+                      key={prompt}
+                      type="button"
+                      disabled={isLoading}
+                      onClick={() => handleSubmit({ text: prompt })}
+                      className="
+                        cursor-pointer rounded-lg border border-[var(--color-hairline)]
+                        bg-[var(--color-surface-1)] px-3.5 py-2.5 text-left
+                        text-[13px] leading-5 text-[var(--color-ink-muted)]
+                        transition-colors duration-150
+                        hover:border-[var(--color-hairline-strong)]
+                        hover:bg-[var(--color-surface-2)]
+                        hover:text-[var(--color-ink)]
+                        disabled:pointer-events-none disabled:opacity-50
+                      "
+                    >
+                      {prompt}
+                    </button>
+                  ))}
                 </div>
               </div>
             )}

@@ -7,7 +7,7 @@ interface ChatLayoutProps {
 
 export default function ChatLayout({ children }: ChatLayoutProps) {
   return (
-    <div className="h-dvh w-full overflow-hidden bg-[var(--color-canvas)]">
+    <div className="h-full w-full overflow-hidden bg-[var(--color-canvas)]">
       {children}
     </div>
   );
