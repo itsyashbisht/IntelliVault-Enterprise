@@ -1,21 +1,22 @@
 "use client";
 import IntelliVaultLogo from "@/components/logo";
 import {
-    MockupReveal,
-    Reveal,
-    Stagger,
-    StaggerItem,
+  MockupReveal,
+  Reveal,
+  Stagger,
+  StaggerItem,
 } from "@/components/marketing/reveal";
 import Wordmark from "@/components/workspace-home/wordmark";
+import { useAuth } from "@clerk/nextjs";
 import {
-    ArrowRight,
-    ChevronRight,
-    FileText,
-    MessageSquare,
-    Search,
-    Shield,
-    Users,
-    Zap,
+  ArrowRight,
+  ChevronRight,
+  FileText,
+  MessageSquare,
+  Search,
+  Shield,
+  Users,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -249,6 +250,8 @@ const steps = [
 
 // ── Main Landing Page ─────────────────────────────────────────────────────────
 export default function LandingPage() {
+  const { isSignedIn, isLoaded } = useAuth();
+
   return (
     <div className="min-h-screen bg-[#010102] text-[#f7f8f8]">
       {/* ── Hero ────────────────────────────────────────────── */}
@@ -278,23 +281,46 @@ export default function LandingPage() {
         </Reveal>
 
         <Reveal delay={0.24}>
-          <div className="flex items-center justify-center gap-3 flex-wrap mb-4">
-            <Link
-              href="/sign-up"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white! text-[13px] sm:text-[14px] font-medium transition-all duration-200 min-h-[40px] hover:-translate-y-px"
-            >
-              Start for free
-              <ChevronRight size={14} />
-            </Link>
-            <Link
-              href="/sign-in"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-[#0f1011] hover:bg-[#141516] border border-[#23252a] hover:border-[#34343a] text-[#d0d6e0] text-[13px] sm:text-[14px] font-medium transition-all duration-200 min-h-[40px] hover:-translate-y-px"
-            >
-              View demo
-            </Link>
+          <div className="flex items-center justify-center gap-3 flex-wrap mb-4 min-h-[40px]">
+            {isLoaded &&
+              (isSignedIn ? (
+                <>
+                  <Link
+                    href="/dashboard"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white! text-[13px] sm:text-[14px] font-medium transition-all duration-200 min-h-[40px] hover:-translate-y-px"
+                  >
+                    Go to dashboard
+                    <ChevronRight size={14} />
+                  </Link>
+                  <a
+                    href="#how-it-works"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-[#0f1011] hover:bg-[#141516] border border-[#23252a] hover:border-[#34343a] text-[#d0d6e0] text-[13px] sm:text-[14px] font-medium transition-all duration-200 min-h-[40px] hover:-translate-y-px"
+                  >
+                    See how it works
+                  </a>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/sign-up"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white! text-[13px] sm:text-[14px] font-medium transition-all duration-200 min-h-[40px] hover:-translate-y-px"
+                  >
+                    Start for free
+                    <ChevronRight size={14} />
+                  </Link>
+                  <Link
+                    href="/sign-in"
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-[8px] bg-[#0f1011] hover:bg-[#141516] border border-[#23252a] hover:border-[#34343a] text-[#d0d6e0] text-[13px] sm:text-[14px] font-medium transition-all duration-200 min-h-[40px] hover:-translate-y-px"
+                  >
+                    Sign in
+                  </Link>
+                </>
+              ))}
           </div>
           <p className="text-[11px] sm:text-[12px] text-[#62666d]">
-            No credit card required · Free workspace forever
+            {isLoaded && isSignedIn
+              ? "Pick up where you left off in your workspaces"
+              : "No credit card required · Free workspace forever"}
           </p>
         </Reveal>
       </section>
@@ -430,19 +456,33 @@ export default function LandingPage() {
               className="text-[22px] sm:text-[28px] font-semibold text-[#f7f8f8] mb-3 max-w-md mx-auto"
               style={{ letterSpacing: "-0.6px" }}
             >
-              Ready to unlock your documents?
+              {isLoaded && isSignedIn
+                ? "Continue unlocking your documents"
+                : "Ready to unlock your documents?"}
             </h2>
             <p className="text-[14px] sm:text-[15px] text-[#8a8f98] mb-7 sm:mb-8 max-w-sm mx-auto">
-              Create a workspace, upload your files, and start getting answers
-              in under two minutes.
+              {isLoaded && isSignedIn
+                ? "Jump back into your workspaces, upload more files, and keep asking questions."
+                : "Create a workspace, upload your files, and start getting answers in under two minutes."}
             </p>
-            <Link
-              href="/sign-up"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white! text-[13px] sm:text-[14px] font-medium transition-all duration-200 min-h-[40px] hover:-translate-y-px"
-            >
-              Create your workspace
-              <ArrowRight size={14} />
-            </Link>
+            {isLoaded &&
+              (isSignedIn ? (
+                <Link
+                  href="/dashboard"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white! text-[13px] sm:text-[14px] font-medium transition-all duration-200 min-h-[40px] hover:-translate-y-px"
+                >
+                  Open dashboard
+                  <ArrowRight size={14} />
+                </Link>
+              ) : (
+                <Link
+                  href="/sign-up"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-[8px] bg-[#5e6ad2] hover:bg-[#828fff] text-white! text-[13px] sm:text-[14px] font-medium transition-all duration-200 min-h-[40px] hover:-translate-y-px"
+                >
+                  Create your workspace
+                  <ArrowRight size={14} />
+                </Link>
+              ))}
           </div>
         </Reveal>
       </section>
