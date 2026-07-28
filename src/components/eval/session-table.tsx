@@ -37,7 +37,7 @@ export default function SessionTable({
     <div className="overflow-x-auto rounded-xl border border-[var(--color-hairline)]">
       <div
         className="
-        grid min-w-full grid-cols-[minmax(180px,2fr)_minmax(90px,1fr)_110px_110px_110px_80px]
+        grid min-w-[680px] grid-cols-[minmax(180px,2fr)_minmax(90px,1fr)_110px_110px_110px_80px]
         px-4 py-2.5
         border-b border-[var(--color-hairline)]
         bg-[var(--color-surface-1)]
@@ -56,7 +56,7 @@ export default function SessionTable({
       </div>
 
       {sessions.length === 0 ? (
-        <div className="flex min-w-full flex-col items-center justify-center gap-3 bg-[var(--color-canvas)] py-16">
+        <div className="flex min-w-[680px] flex-col items-center justify-center gap-3 bg-[var(--color-canvas)] py-16">
           <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-2)] border border-[var(--color-hairline)] flex items-center justify-center">
             <BarChart2 size={18} className="text-[var(--color-ink-tertiary)]" />
           </div>
@@ -75,7 +75,7 @@ export default function SessionTable({
             <Link
               key={session.sessionId}
               href={`/workspace/${workspaceId}/chat/${session.sessionId}`}
-              className="grid min-w-full grid-cols-[minmax(180px,2fr)_minmax(90px,1fr)_110px_110px_110px_80px] items-center px-4 py-3 hover:bg-[#141516] transition-colors"
+              className="grid min-w-[680px] grid-cols-[minmax(180px,2fr)_minmax(90px,1fr)_110px_110px_110px_80px] items-center px-4 py-3 hover:bg-[#141516] transition-colors"
             >
               <span className="text-[13px] text-[#d0d6e0] truncate pr-4">
                 {session.title ?? "Untitled session"}

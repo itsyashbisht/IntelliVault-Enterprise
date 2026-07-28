@@ -12,7 +12,7 @@ export default function MembersRow({ member }: MemberRowProps) {
   return (
     <div
       className="
-      grid min-w-full grid-cols-[80px_minmax(120px,1fr)_minmax(160px,1.2fr)_minmax(110px,1fr)_80px_40px]
+      grid min-w-[680px] grid-cols-[80px_minmax(120px,1fr)_minmax(160px,1.2fr)_minmax(110px,1fr)_80px_40px]
       items-center px-4 py-2.5
       hover:bg-[var(--color-surface-1)]
       transition-colors duration-100

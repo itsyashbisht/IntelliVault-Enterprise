@@ -12,7 +12,7 @@ export default function MembersTable({ members }: MembersTableProps) {
     <div className="overflow-x-auto rounded-xl border border-[var(--color-hairline)]">
       <div
         className="
-        grid min-w-full grid-cols-[80px_minmax(120px,1fr)_minmax(160px,1.2fr)_minmax(110px,1fr)_80px_40px]
+        grid min-w-[680px] grid-cols-[80px_minmax(120px,1fr)_minmax(160px,1.2fr)_minmax(110px,1fr)_80px_40px]
         px-4 py-2.5
         border-b border-[var(--color-hairline)]
         bg-[var(--color-surface-1)]
@@ -29,7 +29,7 @@ export default function MembersTable({ members }: MembersTableProps) {
       </div>
 
       {members.length === 0 ? (
-        <div className="flex min-w-full flex-col items-center justify-center gap-3 bg-[var(--color-canvas)] py-16">
+        <div className="flex min-w-[680px] flex-col items-center justify-center gap-3 bg-[var(--color-canvas)] py-16">
           <div className="w-10 h-10 rounded-xl bg-[var(--color-surface-2)] border border-[var(--color-hairline)] flex items-center justify-center">
             <FileX size={18} className="text-[var(--color-ink-tertiary)]" />
           </div>

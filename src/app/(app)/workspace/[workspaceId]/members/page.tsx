@@ -30,7 +30,7 @@ export default async function MembersPage({
   );
 
   return (
-    <div className="flex flex-col px-8 py-8 gap-8 max-w-full w-full">
+    <div className="flex w-full max-w-full flex-col gap-8 px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       {/* Page header */}
       <MembersClient workspaceId={workspaceId} members={membersWithUsers} />
     </div>
