@@ -1,9 +1,9 @@
-import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
-import { db } from "@/lib/db-config";
-import { and, desc, eq } from "drizzle-orm";
-import { chatSessions, workspaceMembers } from "@/schema";
 import { generateTitle } from "@/app/api/workspaces/[workspaceId]/chat/sessions/utils";
+import { db } from "@/lib/db-config";
+import { chatSessions, workspaceMembers } from "@/schema";
+import { auth } from "@clerk/nextjs/server";
+import { and, desc, eq } from "drizzle-orm";
+import { NextResponse } from "next/server";
 
 /*
 Flow - Create session
@@ -18,7 +18,7 @@ Flow - Create session
 */
 export async function POST(
   req: Request,
-  { params }: { params: Promise<{ workspaceId: string }> },
+  { params }: { params: Promise<{ workspaceId: string }> }
 ) {
   try {
     // Authentication
@@ -31,7 +31,7 @@ export async function POST(
         },
         {
           status: 401,
-        },
+        }
       );
     }
 
@@ -45,7 +45,7 @@ export async function POST(
         },
         {
           status: 400,
-        },
+        }
       );
     }
 
@@ -59,7 +59,7 @@ export async function POST(
         },
         {
           status: 400,
-        },
+        }
       );
     }
 
@@ -67,7 +67,7 @@ export async function POST(
     const member = await db.query.workspaceMembers.findFirst({
       where: and(
         eq(workspaceMembers.workspaceId, workspaceId),
-        eq(workspaceMembers.userId, userId),
+        eq(workspaceMembers.userId, userId)
       ),
     });
 
@@ -79,7 +79,7 @@ export async function POST(
         },
         {
           status: 403,
-        },
+        }
       );
     }
 
@@ -91,7 +91,7 @@ export async function POST(
           success: false,
           message: "Error Generating Chat title.",
         },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -111,7 +111,7 @@ export async function POST(
           success: false,
           message: "Error Creating Chat session.",
         },
-        { status: 500 },
+        { status: 500 }
       );
     }
 
@@ -121,7 +121,7 @@ export async function POST(
         data: { sessionId: session.id, title: session.title },
         message: "Chat session created successfully!",
       },
-      { status: 201 },
+      { status: 201 }
     );
   } catch (error) {
     console.error("[POST /api/workspaces/[workspaceId]/chat/sessions ]", error);
@@ -130,7 +130,7 @@ export async function POST(
         success: false,
         message: "Internal server error",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -145,7 +145,7 @@ Flow - Get chat-session
 
 export async function GET(
   _: Request,
-  { params }: { params: Promise<{ workspaceId: string }> },
+  { params }: { params: Promise<{ workspaceId: string }> }
 ) {
   try {
     // Authentication
@@ -158,7 +158,7 @@ export async function GET(
         },
         {
           status: 401,
-        },
+        }
       );
     }
 
@@ -172,7 +172,7 @@ export async function GET(
         },
         {
           status: 400,
-        },
+        }
       );
     }
 
@@ -180,7 +180,7 @@ export async function GET(
     const member = await db.query.workspaceMembers.findFirst({
       where: and(
         eq(workspaceMembers.workspaceId, workspaceId),
-        eq(workspaceMembers.userId, userId),
+        eq(workspaceMembers.userId, userId)
       ),
     });
 
@@ -192,7 +192,7 @@ export async function GET(
         },
         {
           status: 403,
-        },
+        }
       );
     }
 
@@ -202,8 +202,8 @@ export async function GET(
       .where(
         and(
           eq(chatSessions.workspaceId, workspaceId),
-          eq(chatSessions.userId, userId),
-        ),
+          eq(chatSessions.userId, userId)
+        )
       )
       .orderBy(desc(chatSessions.createdAt))
       .limit(10);
@@ -214,7 +214,7 @@ export async function GET(
           success: false,
           message: "No sessions found.",
         },
-        { status: 404 },
+        { status: 404 }
       );
     }
 
@@ -224,7 +224,7 @@ export async function GET(
         data: recentSessions,
         message: "Recent sessions fetched successfully!",
       },
-      { status: 200 },
+      { status: 200 }
     );
   } catch (error) {
     console.error("[GET /api/workspaces/[workspaceId]/chat/sessions ]", error);
@@ -233,7 +233,7 @@ export async function GET(
         success: false,
         message: "Internal server error",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
