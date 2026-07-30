@@ -1,9 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
+import { and, count, eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db-config";
 import { workspaceMembers, workspaces } from "@/schema";
+import { checkLimit } from "@/lib/billing";
 
 const createWorkspaceSchema = z.object({
   name: z
@@ -39,7 +40,7 @@ export async function POST(req: Request) {
         },
         {
           status: 401,
-        },
+        }
       );
     }
 
@@ -53,7 +54,33 @@ export async function POST(req: Request) {
           message: "Validation failed",
           errors: parsed.error.flatten().fieldErrors,
         },
-        { status: 400 },
+        { status: 400 }
+      );
+    }
+
+    const wsCount = await db
+      .select({ count: count() })
+      .from(workspaceMembers)
+      .where(
+        and(
+          eq(workspaceMembers.userId, userId),
+          eq(workspaceMembers.role, "owner")
+        )
+      );
+
+    const { allowed, limit } = await checkLimit(
+      userId,
+      "workspaces",
+      wsCount[0].count
+    );
+
+    if (!allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Monthly plan limited to ${limit} workspace. Upgrade to Pro or Team.`,
+        },
+        { status: 402 }
       );
     }
 
@@ -91,7 +118,7 @@ export async function POST(req: Request) {
       },
       {
         status: 201,
-      },
+      }
     );
   } catch (error) {
     console.error("[POST /api/workspaces]", error);
@@ -100,7 +127,7 @@ export async function POST(req: Request) {
         success: false,
         message: "Internal server error",
       },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }
@@ -116,7 +143,7 @@ export async function GET() {
         },
         {
           status: 401,
-        },
+        }
       );
     }
 
@@ -142,13 +169,13 @@ export async function GET() {
       },
       {
         status: 200,
-      },
+      }
     );
   } catch (error) {
     console.error("[GET /api/workspaces]", error);
     return NextResponse.json(
       { success: false, message: "Internal server error" },
-      { status: 500 },
+      { status: 500 }
     );
   }
 }

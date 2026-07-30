@@ -1,10 +1,11 @@
+import { checkLimit } from "@/lib/billing";
 import { addContext, chunkContent } from "@/lib/chunking";
 import { db } from "@/lib/db-config";
 import { generateEmbeddings } from "@/lib/embedding";
 import { extractTextFromFile, isSupportedType } from "@/lib/parsers";
 import { chunks, documents, workspaceMembers } from "@/schema";
 import { auth } from "@clerk/nextjs/server";
-import { and, eq, inArray } from "drizzle-orm";
+import { and, count, eq, inArray } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 /*
@@ -76,6 +77,28 @@ export async function POST(
         {
           status: 403,
         }
+      );
+    }
+
+    // GET current doc count for this workspace
+    const docCount = await db
+      .select({ count: count() })
+      .from(documents)
+      .where(eq(documents.workspaceId, workspaceId));
+
+    const { allowed, limit } = await checkLimit(
+      userId,
+      "documents",
+      docCount[0].count
+    );
+
+    if (!allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Your plan is limited to ${limit} documents. Upgrade to Pro or Team.`,
+        },
+        { status: 402 }
       );
     }
 

@@ -1,3 +1,8 @@
+import {
+  checkLimit,
+  getUserBilling,
+  incrementMessageCount,
+} from "@/lib/billing";
 import { db } from "@/lib/db-config";
 import { evaluateRAGResponse } from "@/lib/evals";
 import { searchDocuments } from "@/lib/search";
@@ -216,6 +221,24 @@ export async function POST(
       );
     }
 
+    const userBilling = await getUserBilling(userId);
+    const { allowed, limit } = await checkLimit(
+      userId,
+      "messagesPerMonth",
+      userBilling.messageCount
+    );
+
+    if (!allowed) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: `Monthly message limit reached (${limit}). Upgrade to Pro or Team.`,
+        },
+        { status: 402 }
+      );
+    }
+
+
     // Parse messages
     const {
       messages,
@@ -333,6 +356,8 @@ export async function POST(
             content: output.content,
             source: output.source,
           }));
+
+        await incrementMessageCount(userId);
 
         const [scores] = await Promise.all([
           // RAG evaluation.

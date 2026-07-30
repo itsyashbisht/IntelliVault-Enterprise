@@ -8,3 +8,4 @@ export * from "./chatSessions";
 export * from "./message";
 export * from "./activityLog";
 export * from "./relations";
+export * from "./billing";
