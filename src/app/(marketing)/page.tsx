@@ -233,21 +233,101 @@ const features = [
 const steps = [
   {
     step: "01",
-    title: "Upload your documents",
-    desc: "Drag and drop PDFs, Word docs, or Markdown files into your workspace. IntelliVault parses, chunks, and embeds them automatically.",
+    title: "Ingest",
+    desc: "Upload PDFs, Word docs, or Markdown into a workspace. Files are parsed and indexed automatically.",
+    hint: "Chunk → embed → index",
+    sketch: "ingest" as const,
   },
   {
     step: "02",
-    title: "Ask in plain language",
-    desc: "Type any question. The RAG pipeline embeds your query, retrieves the most relevant chunks, and sends them as grounded context.",
+    title: "Retrieve",
+    desc: "Ask in plain language. IntelliVault finds the most relevant passages across your knowledge base.",
+    hint: "Hybrid vector + keyword search",
+    sketch: "retrieve" as const,
   },
   {
     step: "03",
-    title: "Get cited answers",
-    desc: "Responses are grounded strictly in your documents. Every answer shows which source files were used — no hallucinations.",
+    title: "Generate",
+    desc: "Get answers grounded strictly in your documents — every claim tied back to a source.",
+    hint: "Context-grounded, cited response",
+    sketch: "generate" as const,
   },
 ];
 
+function StepSketch({ type }: { type: "ingest" | "retrieve" | "generate" }) {
+  if (type === "ingest") {
+    return (
+      <div className="mt-5 rounded-[8px] border border-[#23252a] bg-[#0a0b0c] p-3 space-y-2">
+        {["Q3_Financial_Report.pdf", "Leave_Policy.docx", "Onboarding.md"].map(
+          (file, i) => (
+            <div
+              key={file}
+              className="flex items-center gap-2 rounded-[6px] border border-[#23252a] bg-[#141516] px-2.5 py-1.5"
+            >
+              <FileText size={11} className="text-[#62666d] shrink-0" />
+              <span className="text-[10px] text-[#d0d6e0] truncate flex-1">
+                {file}
+              </span>
+              <span
+                className={`text-[9px] font-mono shrink-0 ${
+                  i === 0 ? "text-[#27a644]" : "text-[#62666d]"
+                }`}
+              >
+                {i === 0 ? "indexed" : "embedding…"}
+              </span>
+            </div>
+          )
+        )}
+      </div>
+    );
+  }
+
+  if (type === "retrieve") {
+    return (
+      <div className="mt-5 rounded-[8px] border border-[#23252a] bg-[#0a0b0c] p-3 space-y-2">
+        <div className="flex items-center gap-2 rounded-[6px] border border-[#23252a] bg-[#141516] h-7 px-2.5">
+          <Search size={10} className="text-[#62666d] shrink-0" />
+          <span className="text-[10px] text-[#8a8f98] truncate">
+            What drove Q3 revenue?
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-1.5">
+          {["vector 0.91", "bm25 0.84", "fused"].map((chip) => (
+            <span
+              key={chip}
+              className="inline-flex items-center px-1.5 py-0.5 rounded-[4px] border border-[#23252a] bg-[#0f1011] text-[9px] font-mono text-[#62666d]"
+            >
+              {chip}
+            </span>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mt-5 rounded-[8px] border border-[#23252a] bg-[#0a0b0c] p-3 space-y-2">
+      <div className="rounded-[6px] border border-[#23252a] bg-[#141516] px-2.5 py-2">
+        <p className="text-[10px] text-[#d0d6e0] leading-relaxed">
+          Enterprise subscriptions grew 34% YoY…
+        </p>
+      </div>
+      <div className="flex flex-wrap gap-1.5">
+        {["Q3 Report.pdf · p.8", "Q3 Report.pdf · p.14"].map((cite) => (
+          <span
+            key={cite}
+            className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-[4px] border border-[#23252a] bg-[#0f1011]"
+          >
+            <FileText size={8} className="text-[#62666d] shrink-0" />
+            <span className="text-[8px] text-[#62666d] whitespace-nowrap">
+              {cite}
+            </span>
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 const plans = [
   {
     name: "Free",
@@ -384,11 +464,8 @@ export default function LandingPage() {
       </section>
 
       {/* ── How it works ────────────────────────────────────── */}
-      <section
-        id="how-it-works"
-        className="px-4 sm:px-6 max-w-[1280px] mx-auto mb-16 sm:mb-24"
-      >
-        <Reveal className="text-center mb-10 sm:mb-12">
+      <section id="how-it-works" className="mb-16 sm:mb-24 scroll-mt-20">
+        <Reveal className="text-center mb-10 sm:mb-12 px-4 sm:px-6 max-w-[1280px] mx-auto">
           <p className="text-[11px] font-medium tracking-[0.4px] uppercase text-[#5e6ad2] mb-3">
             How it works
           </p>
@@ -396,37 +473,90 @@ export default function LandingPage() {
             className="text-[28px] sm:text-[36px] md:text-[40px] font-semibold text-[#f7f8f8] leading-[1.15] max-w-xl mx-auto"
             style={{ letterSpacing: "-1px" }}
           >
-            From upload to answer in seconds
+            From documents to cited answers
           </h2>
+          <p className="mt-4 text-[14px] sm:text-[16px] text-[#8a8f98] leading-[1.5] max-w-lg mx-auto">
+            Hybrid retrieval + grounded generation in your workspace.
+          </p>
         </Reveal>
 
-        <Stagger className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-          {steps.map(({ step, title, desc }) => (
-            <StaggerItem key={step}>
-              <div className="relative h-full bg-[#0f1011] border border-[#23252a] rounded-[12px] p-5 sm:p-6 hover:bg-[#141516] hover:border-[#34343a] transition-colors duration-200 overflow-hidden">
-                <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
-                <p className="text-[11px] font-mono text-[#5e6ad2] mb-4 tracking-widest">
-                  {step}
-                </p>
-                <h3
-                  className="text-[15px] sm:text-[16px] font-semibold text-[#f7f8f8] mb-2"
-                  style={{ letterSpacing: "-0.3px" }}
+        {/* Mobile: snap carousel · md+: connected 3-up flow */}
+        <div className="md:px-4 lg:px-6 md:max-w-[1280px] md:mx-auto">
+          <Stagger
+            className="
+              flex md:grid md:grid-cols-[1fr_auto_1fr_auto_1fr]
+              md:items-stretch
+              gap-3 sm:gap-4 md:gap-0
+              overflow-x-auto md:overflow-visible
+              snap-x snap-mandatory
+              scroll-smooth
+              px-4 sm:px-6 md:px-0
+              pb-3
+              [scrollbar-width:none] [-ms-overflow-style:none]
+              [&::-webkit-scrollbar]:hidden
+            "
+          >
+            {steps.flatMap((item, index) => {
+              const card = (
+                <StaggerItem
+                  key={item.step}
+                  className="w-[min(82vw,300px)] sm:w-[min(70vw,320px)] md:w-auto shrink-0 snap-center md:snap-align-none"
                 >
-                  {title}
-                </h3>
-                <p className="text-[13px] text-[#8a8f98] leading-relaxed">
-                  {desc}
-                </p>
-              </div>
-            </StaggerItem>
-          ))}
-        </Stagger>
+                  <div className="relative h-full flex flex-col bg-[#0f1011] border border-[#23252a] rounded-[12px] p-5 sm:p-6 hover:bg-[#141516] hover:border-[#34343a] transition-colors duration-200 overflow-hidden">
+                    <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+                    <p className="text-[11px] font-mono text-[#5e6ad2] mb-4 tracking-widest">
+                      {item.step}
+                    </p>
+                    <h3
+                      className="text-[15px] sm:text-[16px] font-semibold text-[#f7f8f8] mb-2"
+                      style={{ letterSpacing: "-0.3px" }}
+                    >
+                      {item.title}
+                    </h3>
+                    <p className="text-[13px] text-[#8a8f98] leading-relaxed">
+                      {item.desc}
+                    </p>
+                    <p className="mt-3 text-[11px] font-mono text-[#62666d]">
+                      {item.hint}
+                    </p>
+                    <StepSketch type={item.sketch} />
+                  </div>
+                </StaggerItem>
+              );
+
+              if (index >= steps.length - 1) return [card];
+
+              return [
+                card,
+                <div
+                  key={`connector-${item.step}`}
+                  className="hidden md:flex items-center justify-center px-2 self-center"
+                  aria-hidden
+                >
+                  <div className="flex items-center gap-1 text-[#5e6ad2]/50">
+                    <span className="block w-6 h-px bg-current" />
+                    <ChevronRight size={14} />
+                  </div>
+                </div>,
+              ];
+            })}
+          </Stagger>
+        </div>
+
+        <Reveal
+          delay={0.12}
+          className="mt-8 px-4 sm:px-6 max-w-[1280px] mx-auto text-center"
+        >
+          <p className="text-[12px] sm:text-[13px] text-[#62666d]">
+            Built for RAG today — designed for multi-step agentic retrieval next.
+          </p>
+        </Reveal>
       </section>
 
       {/* ── Features grid ───────────────────────────────────── */}
       <section
         id="features"
-        className="px-4 sm:px-6 max-w-[1280px] mx-auto mb-16 sm:mb-24"
+        className="px-4 sm:px-6 max-w-[1280px] mx-auto mb-16 sm:mb-24 scroll-mt-20"
       >
         <Reveal className="text-center mb-10 sm:mb-12">
           <p className="text-[11px] font-medium tracking-[0.4px] uppercase text-[#5e6ad2] mb-3">
@@ -496,7 +626,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── Pricing ─────────────────────────────────────────── */}
-      <section id="pricing" className="mb-16 sm:mb-24">
+      <section id="pricing" className="mb-16 sm:mb-24 scroll-mt-20">
         <Reveal className="text-center mb-10 sm:mb-12 px-4 sm:px-6 max-w-[1280px] mx-auto">
           <p className="text-[11px] font-medium tracking-[0.4px] uppercase text-[#5e6ad2] mb-3">
             Pricing

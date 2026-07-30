@@ -6,6 +6,12 @@ import { ChevronRight } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+const NAV_LINKS = [
+  { label: "Features", href: "/#features" },
+  { label: "How it works", href: "/#how-it-works" },
+  { label: "Pricing", href: "/#pricing" },
+] as const;
+
 export default function TopNav() {
   const [scrolled, setScrolled] = useState(false);
   const { isSignedIn, isLoaded, signOut } = useAuth();
@@ -30,15 +36,15 @@ export default function TopNav() {
       </Link>
 
       <nav className="hidden md:flex items-center gap-0.5 ml-8">
-        {["Features", "How it works", "Pricing"].map((item) => (
+        {NAV_LINKS.map(({ label, href }) => (
           <a
-            key={item}
-            href={`#${item.toLowerCase().replace(" ", "-")}`}
+            key={href}
+            href={href}
             className="px-3 py-1.5 text-[13px] text-[#8a8f98] hover:text-[#f7f8f8] transition-colors rounded-[6px] hover:bg-[#0f1011]"
           >
-            {item}{" "}
+            {label}
           </a>
-        ))}{" "}
+        ))}
       </nav>
 
       <div className="ml-auto flex items-center gap-2">
@@ -77,7 +83,7 @@ export default function TopNav() {
                 Sign out
               </button>
             </>
-          ))}{" "}
+          ))}
       </div>
     </header>
   );
