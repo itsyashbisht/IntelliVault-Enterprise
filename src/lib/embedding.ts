@@ -1,15 +1,17 @@
-import { google } from "@ai-sdk/google";
+import { openai } from "@ai-sdk/openai";
 import { embed, embedMany } from "ai";
+
+
 
 export async function generateEmbedding(text: string) {
   const input = text.replaceAll("\n", " ");
 
   const { embedding } = await embed({
-    model: google.embedding("gemini-embedding-001"),
+    model: openai.embeddingModel("text-embedding-3-small"),
     value: input,
     providerOptions: {
-      google: {
-        outputDimensionality: 768,
+      openai: {
+        dimensions: 768,
       },
     },
   });
@@ -20,15 +22,24 @@ export async function generateEmbedding(text: string) {
 export async function generateEmbeddings(texts: string[]) {
   const inputs = texts.map((text) => text.replaceAll("\n", " "));
 
-  const { embeddings } = await embedMany({
-    model: google.embedding("gemini-embedding-001"),
-    values: inputs,
-    providerOptions: {
-      google: {
-        outputDimensionality: 768,
-      },
-    },
-  });
+  const batchSize = 90;
+  const allEmbeddings: number[][] = [];
 
-  return embeddings;
+  for (let i = 0; i < inputs.length; i += batchSize) {
+    const batch = inputs.slice(i, i + batchSize);
+
+    const { embeddings } = await embedMany({
+      model: openai.embeddingModel("text-embedding-3-small"),
+      values: batch,
+      providerOptions: {
+        openai: {
+          dimensions: 768,
+        },
+      },
+    });
+
+    allEmbeddings.push(...embeddings);
+  }
+
+  return allEmbeddings;
 }
