@@ -248,6 +248,57 @@ const steps = [
   },
 ];
 
+const plans = [
+  {
+    name: "Free",
+    tagline: "Everything you need to get started.",
+    price: "0",
+    cta: "Start for free",
+    href: "/sign-up",
+    featured: false,
+    includesLabel: "Includes",
+    features: [
+      "2 workspaces",
+      "3 documents per workspace",
+      "50 messages per month",
+      "Hybrid search & citations",
+      "Team invites (viewer)",
+    ],
+  },
+  {
+    name: "Pro",
+    tagline: "For individuals shipping serious RAG workflows.",
+    price: "19",
+    cta: "Get Pro",
+    href: "/sign-up",
+    featured: true,
+    includesLabel: "Everything in Free, plus",
+    features: [
+      "10 workspaces",
+      "50 documents per workspace",
+      "1,200 messages per month",
+      "Priority embedding queue",
+      "Stripe billing portal",
+    ],
+  },
+  {
+    name: "Team",
+    tagline: "For teams that need scale and control.",
+    price: "49",
+    cta: "Get Team",
+    href: "/sign-up",
+    featured: false,
+    includesLabel: "Everything in Pro, plus",
+    features: [
+      "250 workspaces",
+      "1,500 documents per workspace",
+      "10,000 messages per month",
+      "Owner / editor / viewer roles",
+      "Priority support",
+    ],
+  },
+];
+
 // ── Main Landing Page ─────────────────────────────────────────────────────────
 export default function LandingPage() {
   const { isSignedIn, isLoaded } = useAuth();
@@ -444,6 +495,112 @@ export default function LandingPage() {
         </Reveal>
       </section>
 
+      {/* ── Pricing ─────────────────────────────────────────── */}
+      <section id="pricing" className="mb-16 sm:mb-24">
+        <Reveal className="text-center mb-10 sm:mb-12 px-4 sm:px-6 max-w-[1280px] mx-auto">
+          <p className="text-[11px] font-medium tracking-[0.4px] uppercase text-[#5e6ad2] mb-3">
+            Pricing
+          </p>
+          <h2
+            className="text-[28px] sm:text-[36px] md:text-[40px] font-semibold text-[#f7f8f8] leading-[1.15] max-w-2xl mx-auto"
+            style={{ letterSpacing: "-1px" }}
+          >
+            Plans that scale with your knowledge base
+          </h2>
+          <p className="mt-4 text-[14px] sm:text-[16px] text-[#8a8f98] leading-[1.5] max-w-lg mx-auto">
+            Start free. Upgrade when your team needs more workspaces, documents,
+            and monthly messages.
+          </p>
+        </Reveal>
+
+        {/* Mobile: snap carousel · md+: 3-up grid */}
+        <div className="md:px-4 lg:px-6 md:max-w-[1280px] md:mx-auto">
+          <Stagger
+            className="
+              flex md:grid md:grid-cols-3
+              gap-3 sm:gap-4
+              overflow-x-auto md:overflow-visible
+              snap-x snap-mandatory
+              scroll-smooth
+              px-4 sm:px-6 md:px-0
+              pb-3
+              [scrollbar-width:none] [-ms-overflow-style:none]
+              [&::-webkit-scrollbar]:hidden
+            "
+          >
+            {plans.map((plan) => (
+              <StaggerItem
+                key={plan.name}
+                className="w-[min(82vw,300px)] sm:w-[min(70vw,320px)] md:w-auto shrink-0 snap-center md:snap-align-none"
+              >
+                <div
+                  className={`relative h-full flex flex-col rounded-[12px] border p-6 sm:p-7 transition-colors duration-200 overflow-hidden ${
+                    plan.featured
+                      ? "bg-[#141516] border-[#34343a] hover:border-[#5e6ad2]/40"
+                      : "bg-[#0f1011] border-[#23252a] hover:bg-[#141516] hover:border-[#34343a]"
+                  }`}
+                >
+                  <div className="pointer-events-none absolute inset-x-6 top-0 h-px bg-gradient-to-r from-transparent via-white/8 to-transparent" />
+
+                  {plan.featured && (
+                    <span className="absolute top-5 right-5 inline-flex items-center px-2 py-0.5 rounded-full bg-[#23252a] text-[11px] font-medium text-[#d0d6e0]">
+                      Popular
+                    </span>
+                  )}
+
+                  <p className="text-[13px] font-medium text-[#5e6ad2] mb-1.5">
+                    {plan.name}
+                  </p>
+                  <p className="text-[13px] text-[#8a8f98] leading-relaxed mb-6 min-h-[40px]">
+                    {plan.tagline}
+                  </p>
+
+                  <div className="flex items-end gap-2 mb-6">
+                    <span
+                      className="text-[40px] sm:text-[44px] font-semibold text-[#f7f8f8] leading-none"
+                      style={{ letterSpacing: "-1.2px" }}
+                    >
+                      ${plan.price}
+                    </span>
+                    <span className="text-[13px] text-[#8a8f98] pb-1.5">
+                      USD / month
+                    </span>
+                  </div>
+
+                  <Link
+                    href={isLoaded && isSignedIn ? "/dashboard" : plan.href}
+                    className={`inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-[8px] text-[13px] sm:text-[14px] font-medium transition-all duration-200 min-h-[40px] mb-7 ${
+                      plan.featured
+                        ? "bg-[#5e6ad2] hover:bg-[#828fff] text-white! hover:-translate-y-px"
+                        : "bg-[#0f1011] hover:bg-[#18191a] border border-[#23252a] hover:border-[#34343a] text-[#d0d6e0]"
+                    }`}
+                  >
+                    {isLoaded && isSignedIn ? "Go to dashboard" : plan.cta}
+                  </Link>
+
+                  <p className="text-[12px] font-medium text-[#f7f8f8] mb-3">
+                    {plan.includesLabel}
+                  </p>
+                  <ul className="flex flex-col gap-2.5 mt-auto">
+                    {plan.features.map((feature) => (
+                      <li
+                        key={feature}
+                        className="flex items-start gap-2.5 text-[13px] text-[#8a8f98]"
+                      >
+                        <span className="text-[#62666d] shrink-0 mt-px select-none">
+                          +
+                        </span>
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </StaggerItem>
+            ))}
+          </Stagger>
+        </div>
+      </section>
+
       {/* ── CTA Banner ──────────────────────────────────────── */}
       <section className="px-4 sm:px-6 max-w-[1280px] mx-auto pb-16 sm:pb-24">
         <Reveal>
@@ -492,15 +649,24 @@ export default function LandingPage() {
         <div className="max-w-[1280px] mx-auto flex flex-col sm:flex-row items-center sm:items-center justify-between gap-4">
           <Wordmark size="sm" />
           <div className="flex items-center gap-4 sm:gap-6">
-            {["Features", "Docs", "GitHub"].map((item) => (
-              <a
-                key={item}
-                href="#"
-                className="text-[12px] text-[#62666d] hover:text-[#8a8f98] transition-colors"
-              >
-                {item}
-              </a>
-            ))}
+            <a
+              href="#features"
+              className="text-[12px] text-[#62666d] hover:text-[#8a8f98] transition-colors"
+            >
+              Features
+            </a>
+            <a
+              href="#pricing"
+              className="text-[12px] text-[#62666d] hover:text-[#8a8f98] transition-colors"
+            >
+              Pricing
+            </a>
+            <a
+              href="#"
+              className="text-[12px] text-[#62666d] hover:text-[#8a8f98] transition-colors"
+            >
+              Docs
+            </a>
           </div>
           <p className="text-[11px] sm:text-[12px] text-[#62666d]">
             © 2026 IntelliVault. Built by Yash Bisht.
