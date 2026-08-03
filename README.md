@@ -16,7 +16,44 @@
 
 [Live Demo](https://intellivault-phi.vercel.app) · [GitHub](https://github.com/itsyashbisht/IntelliVault-Enterprise) · [LinkedIn](https://linkedin.com/in/yashbisht)
 
+<br />
+
+<img src="./public/demo/575shots_so.png" alt="IntelliVault — landing page and workspace chat with cited answers" width="900" />
+
 </div>
+
+---
+
+## Demo
+
+Product walkthrough + UI mockups.
+
+### Product mockups
+
+<table>
+  <tr>
+    <td width="55%" align="center" valign="top">
+      <img src="./public/demo/341shots_so.png" alt="Desktop — Free / Pro / Team pricing" width="100%" />
+      <br />
+      <em>Pricing — Free / Pro ($19) / Team ($49)</em>
+    </td>
+    <td width="45%" align="center" valign="top">
+      <img src="./public/demo/42shots_so.png" alt="Mobile — IntelliVault landing and chat preview" width="100%" />
+      <br />
+      <em>Mobile — landing + chat preview</em>
+    </td>
+  </tr>
+</table>
+
+### Walkthrough
+
+<p align="center">
+  <video src="./public/demo/intellivault-demo.mp4" controls width="720" title="IntelliVault product demo">
+    <a href="./public/demo/intellivault-demo.mp4">Watch the demo video</a>
+  </video>
+  <br />
+  <em>Upload docs → ask questions → get cited answers. Workspaces, eval dashboard, and Stripe billing included.</em>
+</p>
 
 ---
 
