@@ -76,6 +76,37 @@ export async function POST(req: Request) {
 
     let stripeCustomerId = userBilling.stripeCustomerId;
 
+    // Stale IDs from a previous Stripe account/sandbox are invalid
+    if (stripeCustomerId) {
+      let customerValid = false;
+      try {
+        const existing = await stripe.customers.retrieve(stripeCustomerId);
+        customerValid = !("deleted" in existing && existing.deleted);
+      } catch (error) {
+        if (
+          !(
+            error instanceof stripe.errors.StripeError &&
+            error.code === "resource_missing"
+          )
+        ) {
+          throw error;
+        }
+      }
+
+      if (!customerValid) {
+        stripeCustomerId = null;
+        await db
+          .update(billing)
+          .set({
+            stripeCustomerId: null,
+            stripeSubscriptionId: null,
+            plan: "free",
+            updatedAt: new Date(),
+          })
+          .where(eq(billing.userId, userId));
+      }
+    }
+
     if (!stripeCustomerId) {
       const user = await currentUser();
       const email = user?.primaryEmailAddress?.emailAddress;

@@ -9,8 +9,11 @@
 // 5. return { url: session.url }
 
 import { getUserBilling } from "@/lib/billing";
+import { db } from "@/lib/db-config";
 import { stripe } from "@/lib/stripe";
+import { billing } from "@/schema";
 import { auth } from "@clerk/nextjs/server";
+import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 
 export async function POST() {
@@ -36,6 +39,34 @@ export async function POST() {
         { success: false, message: "No active subscription" },
         { status: 400 }
       );
+    }
+
+    try {
+      await stripe.customers.retrieve(userBilling.stripeCustomerId);
+    } catch (error) {
+      if (
+        error instanceof stripe.errors.StripeError &&
+        error.code === "resource_missing"
+      ) {
+        await db
+          .update(billing)
+          .set({
+            stripeCustomerId: null,
+            stripeSubscriptionId: null,
+            plan: "free",
+            updatedAt: new Date(),
+          })
+          .where(eq(billing.userId, userId));
+
+        return NextResponse.json(
+          {
+            success: false,
+            message: "No active subscription. Please upgrade again.",
+          },
+          { status: 400 }
+        );
+      }
+      throw error;
     }
 
     const session = await stripe.billingPortal.sessions.create({
